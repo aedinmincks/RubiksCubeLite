@@ -7,6 +7,11 @@
 #include <map>
 #include <memory>
 
+#include "fmt/core.h"
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
 /*
 *	  z
 *	  |
@@ -188,8 +193,7 @@ class CCube {
 private:
 	int level_;
 	int x_, y_, z_;
-	int pitch_, yaw_, roll_;
-	std::vector<char> surfaces_;
+	std::string surfaces_;
 
 	void rotate(int& x, int& y, int n, EAngle angle) {
 		int t;
@@ -218,7 +222,7 @@ private:
 	}
 
 	void rotato_surface(EAxis axis, EAngle angle) {
-		std::vector<char> copy(surfaces_);
+		std::string copy(surfaces_);
 		uint8_t b;
 		b = (uint8_t)surface_table[(uint8_t)ESurface::up][(uint8_t)axis][(uint8_t)angle];
 		surfaces_[(uint8_t)ESurface::up] = copy[b];
@@ -236,8 +240,7 @@ private:
 
 public:
 	CCube(int x, int y, int z, int level) :
-		level_(level), x_(x), y_(y), z_(z),
-		pitch_(0), yaw_(0), roll_(0) {
+		level_(level), x_(x), y_(y), z_(z) {
 		surfaces_.assign(6, ' ');
 		surfaces_[(uint8_t)ESurface::up] = (z_ == level_ - 1) ? 'w' : '.';
 		surfaces_[(uint8_t)ESurface::down] = (z_ == 0) ? 'y' : '.';
@@ -250,17 +253,14 @@ public:
 	void Rotate(EAxis axis, EAngle angle) {
 		switch (axis) {
 		case EAxis::pitch:
-			pitch_ = (pitch_ + (uint8_t)angle * 90) % 360;
 			rotate(y_, z_, level_, angle);
 			rotato_surface(axis, angle);
 			break;
 		case EAxis::yaw:
-			yaw_ = (yaw_ + (uint8_t)angle * 90) % 360;
 			rotate(z_, x_, level_, angle);
 			rotato_surface(axis, angle);
 			break;
 		case EAxis::roll:
-			roll_ = (roll_ + (uint8_t)angle * 90) % 360;
 			rotate(x_, y_, level_, angle);
 			rotato_surface(axis, angle);
 			break;
@@ -324,11 +324,23 @@ public:
 	char GetBack() {
 		return surfaces_[(uint8_t)ESurface::back];
 	}
+
+	void SetSurfaces(std::string& v) {
+		if (v.size() != 6) {
+			return;
+		}
+
+		surfaces_ = v;
+	}
+
+	std::string GetSurfaces() {
+		return surfaces_;
+	}
 };
 
 
 class CMagicCube {
-private:
+public:
 	int level_;
 	std::vector<std::shared_ptr<CCube>> cubes_;
 
@@ -419,6 +431,43 @@ public:
 
 		std::cout << std::endl;
 	}
+
+public:
+	static std::string Serialization(std::vector<std::shared_ptr<CCube>>& cubes, int level) {
+		rapidjson::Document root;
+		root.SetArray();
+		auto& allocator = root.GetAllocator();
+
+		for (int n = 0; n < cubes.size(); n++) {
+			auto cube = cubes[n];
+
+			int x = cube->GetX();
+			int y = cube->GetY();
+			int z = cube->GetZ();
+			int m = x * level * level + y * level + z;
+
+			std::string s = cube->GetSurfaces();
+
+			rapidjson::Value obj(rapidjson::kObjectType);
+
+			obj.AddMember("n", n, allocator);
+			obj.AddMember("m", m, allocator);
+			obj.AddMember("s", rapidjson::Value().SetString(s.c_str(), allocator), allocator);
+
+			root.PushBack(obj, allocator);
+		}
+
+		rapidjson::StringBuffer strBuffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strBuffer);
+		root.Accept(writer);
+
+		return strBuffer.GetString();
+	}
+
+	static std::vector<std::shared_ptr<CCube>> Deserialization(std::string s) {
+
+	}
+
 };
 
 int main()
@@ -438,18 +487,18 @@ int main()
 		}
 		else if (cmd == "help")
 		{
-
+			std::cout << "just see code.\n";
 		}
 		else if (cmd == "init") {
 			std::cin >> level;
 
-			if (level >= 2) {
+			if (level >= 2 && level <= 3) {
 				mc = std::make_shared<CMagicCube>(level);
 
 				std::cout << "level initialize done!\n";
 			}
 			else {
-				std::cout << "level less than 2.\n";
+				std::cout << fmt::format("The level<{}> should be in the [2, 3] interval.\n", level);
 			}
 		}
 		else if (cmd == "print")
@@ -514,7 +563,14 @@ int main()
 					break;
 				}
 			}
+		}
+		else if (cmd == "serail") {
+			if (mc == nullptr) {
+				std::cout << "please initialize first!\n";
+				continue;
+			}
 
+			std::cout << CMagicCube::Serialization(mc->cubes_, mc->level_);
 		}
 	}
 
