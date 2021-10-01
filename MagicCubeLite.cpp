@@ -8,9 +8,6 @@
 #include <memory>
 
 #include "fmt/core.h"
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
 
 /*
 *	  z
@@ -26,7 +23,7 @@ enum class EAxis : uint8_t {
 	roll,
 };
 
-enum class ESurface : uint8_t {
+enum class EDirection : uint8_t {
 	up = 0,
 	down,
 	left,
@@ -42,381 +39,203 @@ enum class EAngle : uint8_t {
 	_270,
 };
 
-const static std::vector<std::vector<std::vector<ESurface>>> surface_table{
+const static std::vector<char> Dir2ColorMap{'W', 'Y', 'G', 'B', 'R', 'O'};
+
+const static std::vector<std::vector<std::vector<int>>> surface_table{
 	//up
 	{
 		//pitch
 		{
-			ESurface::up,
-			ESurface::left,
-			ESurface::down,
-			ESurface::right,
+			(int)EDirection::up,
+			(int)EDirection::left,
+			(int)EDirection::down,
+			(int)EDirection::right,
 		},
 		//yaw
 		{
-			ESurface::up,
-			ESurface::front,
-			ESurface::down,
-			ESurface::back,
+			(int)EDirection::up,
+			(int)EDirection::front,
+			(int)EDirection::down,
+			(int)EDirection::back,
 		},
 		//roll
 		{
-			ESurface::up,
-			ESurface::up,
-			ESurface::up,
-			ESurface::up,
+			(int)EDirection::up,
+			(int)EDirection::up,
+			(int)EDirection::up,
+			(int)EDirection::up,
 		},
 	},
 	//down
 	{
 		//pitch
 		{
-			ESurface::down,
-			ESurface::right,
-			ESurface::up,
-			ESurface::left,
+			(int)EDirection::down,
+			(int)EDirection::right,
+			(int)EDirection::up,
+			(int)EDirection::left,
 		},
 		//yaw
 		{
-			ESurface::down,
-			ESurface::back,
-			ESurface::up,
-			ESurface::front,
+			(int)EDirection::down,
+			(int)EDirection::back,
+			(int)EDirection::up,
+			(int)EDirection::front,
 		},
 		//roll
 		{
-			ESurface::down,
-			ESurface::down,
-			ESurface::down,
-			ESurface::down,
+			(int)EDirection::down,
+			(int)EDirection::down,
+			(int)EDirection::down,
+			(int)EDirection::down,
 		},
 	},
 	//left
 	{
 		//pitch
 		{
-			ESurface::left,
-			ESurface::down,
-			ESurface::right,
-			ESurface::up,
+			(int)EDirection::left,
+			(int)EDirection::down,
+			(int)EDirection::right,
+			(int)EDirection::up,
 		},
 		//yaw
 		{
-			ESurface::left,
-			ESurface::left,
-			ESurface::left,
-			ESurface::left,
+			(int)EDirection::left,
+			(int)EDirection::left,
+			(int)EDirection::left,
+			(int)EDirection::left,
 		},
 		//roll
 		{
-			ESurface::left,
-			ESurface::front,
-			ESurface::right,
-			ESurface::back,
+			(int)EDirection::left,
+			(int)EDirection::front,
+			(int)EDirection::right,
+			(int)EDirection::back,
 		},
 	},
 	//right
 	{
 		//pitch
 		{
-			ESurface::right,
-			ESurface::up,
-			ESurface::left,
-			ESurface::down,
+			(int)EDirection::right,
+			(int)EDirection::up,
+			(int)EDirection::left,
+			(int)EDirection::down,
 		},
 		//yaw
 		{
-			ESurface::right,
-			ESurface::right,
-			ESurface::right,
-			ESurface::right,
+			(int)EDirection::right,
+			(int)EDirection::right,
+			(int)EDirection::right,
+			(int)EDirection::right,
 		},
 		//roll
 		{
-			ESurface::right,
-			ESurface::back,
-			ESurface::left,
-			ESurface::front,
+			(int)EDirection::right,
+			(int)EDirection::back,
+			(int)EDirection::left,
+			(int)EDirection::front,
 		},
 	},
 	//front
 	{
 		//pitch
 		{
-			ESurface::front,
-			ESurface::front,
-			ESurface::front,
-			ESurface::front,
+			(int)EDirection::front,
+			(int)EDirection::front,
+			(int)EDirection::front,
+			(int)EDirection::front,
 		},
 		//yaw
 		{
-			ESurface::front,
-			ESurface::down,
-			ESurface::back,
-			ESurface::up,
+			(int)EDirection::front,
+			(int)EDirection::down,
+			(int)EDirection::back,
+			(int)EDirection::up,
 		},
 		//roll
 		{
-			ESurface::front,
-			ESurface::right,
-			ESurface::back,
-			ESurface::left,
+			(int)EDirection::front,
+			(int)EDirection::right,
+			(int)EDirection::back,
+			(int)EDirection::left,
 		},
 	},
 	//back
 	{
 		//pitch
 		{
-			ESurface::back,
-			ESurface::back,
-			ESurface::back,
-			ESurface::back,
+			(int)EDirection::back,
+			(int)EDirection::back,
+			(int)EDirection::back,
+			(int)EDirection::back,
 		},
 		//yaw
 		{
-			ESurface::back,
-			ESurface::up,
-			ESurface::front,
-			ESurface::down,
+			(int)EDirection::back,
+			(int)EDirection::up,
+			(int)EDirection::front,
+			(int)EDirection::down,
 		},
 		//roll
 		{
-			ESurface::back,
-			ESurface::left,
-			ESurface::front,
-			ESurface::right,
+			(int)EDirection::back,
+			(int)EDirection::left,
+			(int)EDirection::front,
+			(int)EDirection::right,
 		},
 	},
 };
 
-class CCube {
-private:
-	int level_;
-	int x_, y_, z_;
-	std::string surfaces_;
-
-	void rotate(int& x, int& y, int n, EAngle angle) {
-		int t;
-
-		switch (angle)
-		{
-		case EAngle::_0:
-			break;
-		case EAngle::_90:
-			t = y;
-			y = n - 1 - x;
-			x = t;
-			break;
-		case EAngle::_180:
-			y = n - 1 - y;
-			x = n - 1 - x;
-			break;
-		case EAngle::_270:
-			t = y;
-			y = x;
-			x = n - 1 - t;
-			break;
-		default:
-			break;
-		}
-	}
-
-	void rotato_surface(EAxis axis, EAngle angle) {
-		std::string copy(surfaces_);
-		uint8_t b;
-		b = (uint8_t)surface_table[(uint8_t)ESurface::up][(uint8_t)axis][(uint8_t)angle];
-		surfaces_[(uint8_t)ESurface::up] = copy[b];
-		b = (uint8_t)surface_table[(uint8_t)ESurface::down][(uint8_t)axis][(uint8_t)angle];
-		surfaces_[(uint8_t)ESurface::down] = copy[b];
-		b = (uint8_t)surface_table[(uint8_t)ESurface::left][(uint8_t)axis][(uint8_t)angle];
-		surfaces_[(uint8_t)ESurface::left] = copy[b];
-		b = (uint8_t)surface_table[(uint8_t)ESurface::right][(uint8_t)axis][(uint8_t)angle];
-		surfaces_[(uint8_t)ESurface::right] = copy[b];
-		b = (uint8_t)surface_table[(uint8_t)ESurface::front][(uint8_t)axis][(uint8_t)angle];
-		surfaces_[(uint8_t)ESurface::front] = copy[b];
-		b = (uint8_t)surface_table[(uint8_t)ESurface::back][(uint8_t)axis][(uint8_t)angle];
-		surfaces_[(uint8_t)ESurface::back] = copy[b];
-	}
-
-public:
-	CCube(int x, int y, int z, int level) :
-		level_(level), x_(x), y_(y), z_(z) {
-		surfaces_.assign(6, ' ');
-		surfaces_[(uint8_t)ESurface::up] = (z_ == level_ - 1) ? 'w' : '.';
-		surfaces_[(uint8_t)ESurface::down] = (z_ == 0) ? 'y' : '.';
-		surfaces_[(uint8_t)ESurface::left] = (y_ == 0) ? 'g' : '.';
-		surfaces_[(uint8_t)ESurface::right] = (y_ == level_ - 1) ? 'b' : '.';
-		surfaces_[(uint8_t)ESurface::front] = (x_ == level_ - 1) ? 'r' : '.';
-		surfaces_[(uint8_t)ESurface::back] = (x_ == 0) ? 'o' : '.';
-	}
-
-	void Rotate(EAxis axis, EAngle angle) {
-		switch (axis) {
-		case EAxis::pitch:
-			rotate(y_, z_, level_, angle);
-			rotato_surface(axis, angle);
-			break;
-		case EAxis::yaw:
-			rotate(z_, x_, level_, angle);
-			rotato_surface(axis, angle);
-			break;
-		case EAxis::roll:
-			rotate(x_, y_, level_, angle);
-			rotato_surface(axis, angle);
-			break;
-		default:
-			break;
-		}
-	}
-
-	int GetX() {
-		return x_;
-	}
-
-	int GetY() {
-		return y_;
-	}
-
-	int GetZ() {
-		return z_;
-	}
-
-	int GetValueByAxis(EAxis axis) {
-		int ans = -1;
-		switch (axis)
-		{
-		case EAxis::pitch:
-			ans = x_;
-			break;
-		case EAxis::yaw:
-			ans = y_;
-			break;
-		case EAxis::roll:
-			ans = z_;
-			break;
-		default:
-			break;
-		}
-
-		return ans;
-	}
-
-	char GetTop() {
-		return surfaces_[(uint8_t)ESurface::up];
-	}
-
-	char GetBottom() {
-		return surfaces_[(uint8_t)ESurface::down];
-	}
-
-	char GetLeft() {
-		return surfaces_[(uint8_t)ESurface::left];
-	}
-
-	char GetRight() {
-		return surfaces_[(uint8_t)ESurface::right];
-	}
-
-	char GetFront() {
-		return surfaces_[(uint8_t)ESurface::front];
-	}
-
-	char GetBack() {
-		return surfaces_[(uint8_t)ESurface::back];
-	}
-
-	void SetSurfaces(std::string& v) {
-		if (v.size() != 6) {
-			return;
-		}
-
-		surfaces_ = v;
-	}
-
-	std::string GetSurfaces() {
-		return surfaces_;
-	}
-};
-
-
 class CMagicCube {
 public:
 	int level_;
-	std::vector<std::shared_ptr<CCube>> cubes_;
+	std::vector<std::vector<std::vector<char>>>	colors_;
 
 public:
 	CMagicCube(int level) : level_(level) {
-		cubes_.assign(level * level * level, nullptr);
-		for (int i = 0; i < level; i++) {
+		colors_.assign(6, std::vector<std::vector<char>>(level, std::vector<char>(level, '.')));
+		for (int i = (int)EDirection::up; i <= (int)EDirection::back; i++) {
 			for (int j = 0; j < level; j++) {
 				for (int k = 0; k < level; k++) {
-					cubes_[i * level * level + j * level + k] = std::make_shared<CCube>(i, j, k, level);
+					colors_[i][j][k] = Dir2ColorMap[i];
 				}
 			}
 		}
 	}
 
 	void Rotate(EAxis axis, int index, EAngle angle) {
-		for (auto cube : cubes_) {
-			int i = cube->GetValueByAxis(axis);
-			if (i == index) {
-				cube->Rotate(axis, angle);
-			}
-		}
+		std::vector<std::vector<std::vector<char>>>	copy(colors_);
+
+		
 	}
 
 	void print() {
 		int n = level_;
-		std::vector<std::vector<std::vector<char>>>	colors(6, std::vector<std::vector<char>>(n, std::vector<char>(n, ' ')));
-
-
-		for (auto cube : cubes_) {
-			int x = cube->GetX();
-			int y = cube->GetY();
-			int z = cube->GetZ();
-
-			if (x == 0) {
-				colors[(uint8_t)ESurface::back][z][y] = cube->GetBack();
-			}
-			else if (x == n - 1) {
-				colors[(uint8_t)ESurface::front][n - 1 - z][y] = cube->GetFront();
-			}
-			if (y == 0) {
-				colors[(uint8_t)ESurface::left][x][z] = cube->GetLeft();
-			}
-			else if (y == n - 1) {
-				colors[(uint8_t)ESurface::right][x][n - 1 - z] = cube->GetRight();
-			}
-			if (z == 0) {
-				colors[(uint8_t)ESurface::down][x][n - 1 - y] = cube->GetBottom();
-			}
-			else if (z == n - 1) {
-				colors[(uint8_t)ESurface::up][x][y] = cube->GetTop();
-			}
-		}
 
 		std::cout << std::endl;
 
 		for (int i = 0; i < n; i++) {
 			std::cout << std::string(n, ' ');
 			for (int j = 0; j < n; j++) {
-				std::cout << colors[(uint8_t)ESurface::back][i][j];
+				std::cout << colors_[(uint8_t)EDirection::back][i][j];
 			}
 			std::cout << std::endl;
 		}
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
-				std::cout << colors[(uint8_t)ESurface::left][i][j];
+				std::cout << colors_[(uint8_t)EDirection::left][i][j];
 			}
 			for (int j = 0; j < n; j++) {
-				std::cout << colors[(uint8_t)ESurface::up][i][j];
+				std::cout << colors_[(uint8_t)EDirection::up][i][j];
 			}
 			for (int j = 0; j < n; j++) {
-				std::cout << colors[(uint8_t)ESurface::right][i][j];
+				std::cout << colors_[(uint8_t)EDirection::right][i][j];
 			}
 			for (int j = 0; j < n; j++) {
-				std::cout << colors[(uint8_t)ESurface::down][i][j];
+				std::cout << colors_[(uint8_t)EDirection::down][i][j];
 			}
 			std::cout << std::endl;
 		}
@@ -424,7 +243,7 @@ public:
 		for (int i = 0; i < n; i++) {
 			std::cout << std::string(n, ' ');
 			for (int j = 0; j < n; j++) {
-				std::cout << colors[(uint8_t)ESurface::front][i][j];
+				std::cout << colors_[(uint8_t)EDirection::front][i][j];
 			}
 			std::cout << std::endl;
 		}
@@ -433,38 +252,11 @@ public:
 	}
 
 public:
-	static std::string Serialization(std::vector<std::shared_ptr<CCube>>& cubes, int level) {
-		rapidjson::Document root;
-		root.SetArray();
-		auto& allocator = root.GetAllocator();
+	static std::string Serialization(std::vector<std::vector<std::vector<char>>>& colors, int level) {
 
-		for (int n = 0; n < cubes.size(); n++) {
-			auto cube = cubes[n];
-
-			int x = cube->GetX();
-			int y = cube->GetY();
-			int z = cube->GetZ();
-			int m = x * level * level + y * level + z;
-
-			std::string s = cube->GetSurfaces();
-
-			rapidjson::Value obj(rapidjson::kObjectType);
-
-			obj.AddMember("n", n, allocator);
-			obj.AddMember("m", m, allocator);
-			obj.AddMember("s", rapidjson::Value().SetString(s.c_str(), allocator), allocator);
-
-			root.PushBack(obj, allocator);
-		}
-
-		rapidjson::StringBuffer strBuffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strBuffer);
-		root.Accept(writer);
-
-		return strBuffer.GetString();
 	}
 
-	static std::vector<std::shared_ptr<CCube>> Deserialization(std::string s) {
+	static std::vector<std::vector<std::vector<char>>> Deserialization(std::string s) {
 
 	}
 
@@ -570,7 +362,7 @@ int main()
 				continue;
 			}
 
-			std::cout << CMagicCube::Serialization(mc->cubes_, mc->level_);
+			//std::cout << CMagicCube::Serialization(mc->cubes_, mc->level_);
 		}
 	}
 
