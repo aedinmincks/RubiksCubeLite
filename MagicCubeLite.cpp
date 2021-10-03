@@ -7,8 +7,6 @@
 #include <map>
 #include <memory>
 
-#include "fmt/core.h"
-
 /*
 *	  z
 *	  |
@@ -205,9 +203,14 @@ public:
 		}
 	}
 
-	void Rotate(EAxis axis, int index, EAngle angle) {
-		std::vector<std::vector<std::vector<char>>>	copy(colors_);
+	void Rotate(EAxis axis, int start, int end, EAngle angle) {
+		if (start < 0 || start >= level_ || end < 0 || end >= level_) {
+			
+			return;
+		}
 
+		std::vector<std::vector<std::vector<char>>>	copy(colors_);
+		
 		
 	}
 
@@ -290,7 +293,7 @@ int main()
 				std::cout << "level initialize done!\n";
 			}
 			else {
-				std::cout << fmt::format("The level<{}> should be in the [2, 3] interval.\n", level);
+				printf("The level<%d> should be in the [2, 3] interval.\n", level);
 			}
 		}
 		else if (cmd == "print")
@@ -312,49 +315,6 @@ int main()
 			std::string s;
 			std::cin >> s;
 
-			for (auto c : s) {
-				switch (c)
-				{
-				case 'u':
-					mc->Rotate(EAxis::roll, level - 1, EAngle::_270);
-					break;
-				case 'U':
-					mc->Rotate(EAxis::roll, level - 1, EAngle::_90);
-					break;
-				case 'd':
-					mc->Rotate(EAxis::roll, 0, EAngle::_90);
-					break;
-				case 'D':
-					mc->Rotate(EAxis::roll, 0, EAngle::_270);
-					break;
-				case 'l':
-					mc->Rotate(EAxis::yaw, 0, EAngle::_90);
-					break;
-				case 'L':
-					mc->Rotate(EAxis::yaw, 0, EAngle::_270);
-					break;
-				case 'r':
-					mc->Rotate(EAxis::yaw, level - 1, EAngle::_270);
-					break;
-				case 'R':
-					mc->Rotate(EAxis::yaw, level - 1, EAngle::_90);
-					break;
-				case 'f':
-					mc->Rotate(EAxis::pitch, level - 1, EAngle::_270);
-					break;
-				case 'F':
-					mc->Rotate(EAxis::pitch, level - 1, EAngle::_90);
-					break;
-				case 'b':
-					mc->Rotate(EAxis::pitch, 0, EAngle::_90);
-					break;
-				case 'B':
-					mc->Rotate(EAxis::pitch, 0, EAngle::_270);
-					break;
-				default:
-					break;
-				}
-			}
 		}
 		else if (cmd == "serail") {
 			if (mc == nullptr) {
