@@ -1,1 +1,7 @@
-this is text
+colors:
+  up: W
+  down: Y
+  left: G
+  right: B
+  front: R
+  back: O

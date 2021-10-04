@@ -1,6 +1,14 @@
+#include "MagicCube.h"
 #include "config.h"
+
 #include <iostream>
 #include <fstream>
+#include <cassert>
+
+#include "yaml-cpp/yaml.h"
+
+
+std::map<int, char> CConfig::Dir2ColorMap;
 
 void CConfig::Load(std::filesystem::path p)
 {
@@ -10,19 +18,29 @@ void CConfig::Load(std::filesystem::path p)
 
 	printf("load config file <%s> \n", filename.c_str());
 
-	std::ifstream istrm(filename, std::ios::binary | std::ios::ate);
-	if (istrm.is_open()) {
-		auto size = istrm.tellg();
-        std::string str(size, '\0'); // construct string to stream size
-        istrm.seekg(0);
-		if (istrm.read(&str[0], size)) {
-			
-		}
-		else {
-			std::cout << "failed to read " << filename << '\n';
-		}
-	}
-	else {
-		std::cout << "failed to open " << filename << '\n';
-	}
+	YAML::Node config = YAML::LoadFile(filename);
+
+	assert(config["colors"]);
+	YAML::Node colors = config["colors"];
+
+	Dir2ColorMap.clear();
+
+	assert(colors["up"]);
+	Dir2ColorMap[(int)EDirection::up] = colors["up"].as<char>();
+
+	assert(colors["down"]);
+	Dir2ColorMap[(int)EDirection::down] = colors["down"].as<char>();
+
+	assert(colors["left"]);
+	Dir2ColorMap[(int)EDirection::left] = colors["left"].as<char>();
+
+	assert(colors["right"]);
+	Dir2ColorMap[(int)EDirection::right] = colors["right"].as<char>();
+
+	assert(colors["front"]);
+	Dir2ColorMap[(int)EDirection::front] = colors["front"].as<char>();
+
+	assert(colors["back"]);
+	Dir2ColorMap[(int)EDirection::back] = colors["back"].as<char>();
+
 }

@@ -1,8 +1,8 @@
 #include "MagicCube.h"
+#include "config.h"
 
 #include <cassert> 
 
-const static std::vector<char> Dir2ColorMap{ 'W', 'Y', 'G', 'B', 'R', 'O' };
 
 void CMagicCube::InitColors()
 {
@@ -10,7 +10,7 @@ void CMagicCube::InitColors()
 	for (int i = (int)EDirection::up; i <= (int)EDirection::back; i++) {
 		for (int j = 0; j < level_; j++) {
 			for (int k = 0; k < level_; k++) {
-				colors_[i][j][k] = Dir2ColorMap[i];
+				colors_[i][j][k] = CConfig::Dir2ColorMap[i];
 			}
 		}
 	}
