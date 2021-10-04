@@ -1,16 +1,18 @@
 ﻿// main.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <memory>
-
 #include "MagicCube.h"
+#include "config.h"
 
-int main()
+int main(int argc, char* argv[])
 {
+	if (argc < 2) {
+		printf("argc<%d> is less than 2", argc);
+		return 1;
+	}
+
+	CConfig::Load(std::filesystem::path(argv[1]));
+
 	int level = 0;
 	std::shared_ptr<CMagicCube> mc;
 

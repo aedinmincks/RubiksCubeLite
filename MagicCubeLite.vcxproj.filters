@@ -21,10 +21,19 @@
     <ClCompile Include="MagicCube.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MagicCube.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
