@@ -322,3 +322,67 @@ void CMagicCube::print()
 
     std::cout << std::endl;
 }
+
+std::string CCodec::Serialization(const std::vector<std::vector<std::vector<char>>> &colors)
+{
+    std::string str;
+
+    for (auto &i : colors)
+    {
+        for (auto &j : i)
+        {
+            for (auto &k : j)
+            {
+                str += k;
+            }
+        }
+    }
+
+    return str;
+}
+
+std::vector<std::vector<std::vector<char>>> CCodec::Deserialization(const std::string &str)
+{
+    int level = std::sqrt(str.size() / 6);
+
+    std::vector<std::vector<std::vector<char>>> colors;
+
+    colors.assign(6, std::vector<std::vector<char>>(level, std::vector<char>(level, ' ')));
+
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < level; j++)
+        {
+            for (int k = 0; k < level; k++)
+            {
+                colors[i][j][k] = str[i * level * level + j * level + k];
+            }
+        }
+    }
+
+    return colors;
+}
+
+bool CCodec::checkColors(const std::string &str, int level)
+{
+    if (str.size() != level * level * 6)
+    {
+        return false;
+    }
+
+    std::map<char, int> m;
+    for (auto &c : str)
+    {
+        m[c]++;
+    }
+
+    for (auto i = 0; i < 6; i++)
+    {
+        if (m[CConfig::Dir2ColorMap[i]] != level * level)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}

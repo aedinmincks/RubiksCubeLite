@@ -54,6 +54,7 @@ void CConfig::Load(std::filesystem::path p)
 
         assert(input["level"]);
         level = input["level"].as<int>();
+        assert(level > 0);
 
         assert(input["actions"]);
         YAML::Node actions = input["actions"];
@@ -64,20 +65,53 @@ void CConfig::Load(std::filesystem::path p)
 
             assert(action["cmd"]);
             a.cmd = action["cmd"].as<std::string>();
+            assert(!a.cmd.empty());
 
             assert(action["axis"]);
             a.axis = action["axis"].as<int>();
+            assert(a.axis >= (int)EAxis::x && a.axis <= (int)EAxis::z);
 
             assert(action["start"]);
             a.start = action["start"].as<int>();
+            assert(std::abs(a.start) < level);
+            a.start = (level + a.start) % level;
 
             assert(action["end"]);
             a.end = action["end"].as<int>();
+            assert(std::abs(a.end) < level);
+            a.end = (level + a.end) % level;
 
             assert(action["angle"]);
             a.angle = action["angle"].as<int>();
+            assert(a.angle >= (int)EAngle::_0 && a.angle <= (int)EAngle::_270);
 
             InputsMap[level][a.cmd] = a;
         }
     }
+}
+
+std::string CConfig::GetRegex(int level)
+{
+    std::vector<std::string> v;
+
+    for (auto &s : InputsMap[level])
+    {
+        v.emplace_back(s.first);
+    }
+
+    sort(v.begin(), v.end(), [](std::string &a, std::string &b) { return a.size() > b.size(); });
+
+    std::string regex;
+
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (i != 0)
+        {
+            regex += '|';
+        }
+
+        regex += v[i];
+    }
+
+    return regex;
 }

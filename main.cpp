@@ -4,6 +4,8 @@
 #include "MagicCube.h"
 #include "config.h"
 
+#include <regex>
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -14,7 +16,6 @@ int main(int argc, char *argv[])
 
     CConfig::Load(std::filesystem::path(argv[1]));
 
-    int level = 0;
     std::shared_ptr<CMagicCube> mc;
 
     while (1)
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "init")
         {
+            int level = 0;
             std::cin >> level;
 
             if (level >= 2 && level <= 10)
@@ -68,8 +70,21 @@ int main(int argc, char *argv[])
 
             std::string s;
             std::cin >> s;
+
+            std::regex r(CConfig::GetRegex(mc->level_));
+            std::smatch sm;
+            while (std::regex_search(s, sm, r))
+            {
+                std::cout << sm.str() << std::endl;
+
+                auto &input = CConfig::InputsMap[mc->level_][sm.str()];
+
+                mc->Rotate((EAxis)input.axis, input.start, input.end, (EAngle)input.angle);
+
+                s = sm.suffix();
+            }
         }
-        else if (cmd == "serail")
+        else if (cmd == "get")
         {
             if (mc == nullptr)
             {
@@ -77,7 +92,47 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            // std::cout << CMagicCube::Serialization(mc->cubes_, mc->level_);
+            std::cout << CCodec::Serialization(mc->GetColors()) << std::endl;
+        }
+        else if (cmd == "set")
+        {
+            if (mc == nullptr)
+            {
+                std::cout << "please initialize first!\n";
+                continue;
+            }
+
+            std::string s;
+            std::cin >> s;
+
+            if (!CCodec::checkColors(s, mc->level_))
+            {
+                std::cout << "Input format error!\n";
+                continue;
+            }
+
+            std::cout << "old\n" << std::endl;
+
+            mc->print();
+
+            auto c = CCodec::Deserialization(s);
+
+            mc->SetColors(c);
+
+            std::cout << "new\n" << std::endl;
+
+            mc->print();
+
+            std::cout << "done\n" << std::endl;
+        }
+        else if (cmd == "rec")
+        {
+            if (mc == nullptr)
+            {
+                std::cout << "please initialize first!\n";
+                continue;
+            }
+            // to do
         }
     }
 

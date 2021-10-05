@@ -21,4 +21,6 @@ class CConfig
 
   public:
     static void Load(std::filesystem::path p);
+
+    static std::string GetRegex(int level);
 };

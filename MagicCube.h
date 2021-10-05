@@ -64,7 +64,22 @@ class CMagicCube
 
     bool SetColors(std::vector<std::vector<std::vector<char>>> &colors);
 
+    std::vector<std::vector<std::vector<char>>> &GetColors(void)
+    {
+        return colors_;
+    };
+
     bool Rotate(EAxis axis, int start, int end, EAngle angle);
 
     void print();
+};
+
+class CCodec
+{
+  public:
+    static std::string Serialization(const std::vector<std::vector<std::vector<char>>> &colors);
+
+    static std::vector<std::vector<std::vector<char>>> Deserialization(const std::string &str);
+
+    static bool checkColors(const std::string &str, int level);
 };
