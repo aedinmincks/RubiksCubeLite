@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 
     CConfig::Load(std::filesystem::path(argv[1]));
 
+    CConfig::InitRotateMap(10);
+
     std::shared_ptr<CMagicCube> mc;
 
     while (1)

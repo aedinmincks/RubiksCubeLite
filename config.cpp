@@ -9,6 +9,7 @@
 
 std::map<int, char> CConfig::Dir2ColorMap;
 std::map<int, std::map<std::string, SAction>> CConfig::InputsMap;
+std::map<int, std::map<std::pair<int, int>, std::vector<int>>> CConfig::RotateMap;
 
 void CConfig::Load(std::filesystem::path p)
 {
@@ -86,6 +87,83 @@ void CConfig::Load(std::filesystem::path p)
             assert(a.angle >= (int)EAngle::_0 && a.angle <= (int)EAngle::_270);
 
             InputsMap[level][a.cmd] = a;
+        }
+    }
+}
+
+void CConfig::InitRotateMap(int max_level)
+{
+    RotateMap.clear();
+
+    for (int l = 1; l <= max_level; l++)
+    {
+        for (int i = 0; i < l; i++)
+        {
+            auto k = std::make_pair((int)EAxis::x, i);
+            auto &v = RotateMap[l][k];
+
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::left * l * l + i * l + j);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::up * l * l + i * l + j);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::right * l * l + i * l + j);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::down * l * l + i * l + j);
+            }
+        }
+
+        for (int i = 0; i < l; i++)
+        {
+            auto k = std::make_pair((int)EAxis::y, i);
+            auto &v = RotateMap[l][k];
+
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::front * l * l + (l - 1 - j) * l + i);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::up * l * l + (l - 1 - j) * l + i);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::back * l * l + (l - 1 - j) * l + i);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::down * l * l + j * l + (l - 1 - i));
+            }
+        }
+
+        for (int i = 0; i < l; i++)
+        {
+            auto k = std::make_pair((int)EAxis::z, i);
+            auto &v = RotateMap[l][k];
+
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::left * l * l + (l - 1 - j) * l + i);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::back * l * l + i * l + j);
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::right * l * l + j * l + (l - 1 - i));
+            }
+            for (int j = 0; j < l; j++)
+            {
+                v.emplace_back((int)EDirection::front * l * l + (l - 1 - i) * l + (l - 1 - j));
+            }
         }
     }
 }

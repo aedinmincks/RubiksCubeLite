@@ -48,16 +48,7 @@ class CMagicCube
     std::vector<std::vector<std::vector<char>>> colors_;
 
   private:
-    std::map<std::pair<int, int>, std::vector<char *>> Rtable_;
-
-  private:
     void InitColors();
-
-    void InitRtable();
-
-    void RotateArray(std::vector<char *> &arr, EAngle angle);
-
-    void Rotate2DArray(std::vector<std::vector<char>> &arrs, EAngle angle);
 
   public:
     CMagicCube(int level);
@@ -81,5 +72,18 @@ class CCodec
 
     static std::vector<std::vector<std::vector<char>>> Deserialization(const std::string &str);
 
+    static std::vector<std::vector<std::vector<char>>> Deserialization(const std::string &str, int level);
+
     static bool checkColors(const std::string &str, int level);
+};
+
+class CCubeLogic
+{
+  public:
+    static void RotateArray(std::vector<std::vector<std::vector<char>>> &colors, int level, std::vector<int> &arr,
+                            EAngle angle);
+
+    static void Rotate2DArray(std::vector<std::vector<char>> &arrs, int level, EAngle angle);
+
+    static std::string RotateColors(const std::string &str, int level, EAxis axis, int start, int end, EAngle angle);
 };
