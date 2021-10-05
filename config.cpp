@@ -7,8 +7,8 @@
 
 #include "yaml-cpp/yaml.h"
 
-
 std::map<int, char> CConfig::Dir2ColorMap;
+std::map<int, std::map<std::string, SAction>> CConfig::InputsMap;
 
 void CConfig::Load(std::filesystem::path p)
 {
@@ -43,4 +43,39 @@ void CConfig::Load(std::filesystem::path p)
 	assert(colors["back"]);
 	Dir2ColorMap[(int)EDirection::back] = colors["back"].as<char>();
 
+	InputsMap.clear();
+
+	assert(config["inputs"]);
+	YAML::Node inputs = config["inputs"];
+
+	for (auto input : inputs) {
+		int level = 0;
+
+		assert(input["level"]);
+		level = input["level"].as<int>();
+
+		assert(input["actions"]);
+		YAML::Node actions = input["actions"];
+
+		for (auto action : actions) {
+			SAction a;
+
+			assert(action["cmd"]);
+			a.cmd = action["cmd"].as<std::string>();
+
+			assert(action["axis"]);
+			a.axis = action["axis"].as<int>();
+
+			assert(action["start"]);
+			a.start = action["start"].as<int>();
+
+			assert(action["end"]);
+			a.end = action["end"].as<int>();
+
+			assert(action["angle"]);
+			a.angle = action["angle"].as<int>();
+
+			InputsMap[level][a.cmd] = a;
+		}
+	}
 }

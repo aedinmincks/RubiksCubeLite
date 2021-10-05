@@ -187,7 +187,7 @@ bool CMagicCube::Rotate(EAxis axis, int start, int end, EAngle angle) {
 		auto k = std::make_pair((int)axis, i);
 		if (Rtable_.find(k) != Rtable_.end()) {
 			auto& v = Rtable_[k];
-			RotateArray(v, angle);	
+			RotateArray(v, angle);
 		}
 	}
 

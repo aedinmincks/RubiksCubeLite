@@ -1,7 +1,182 @@
 colors:
-  up: W
-  down: Y
-  left: G
-  right: B
-  front: R
-  back: O
+  up: "W"
+  down: "Y"
+  left: "G"
+  right: "B"
+  front: "R"
+  back: "O"
+
+axis_x:
+  axis: &axis_x 0
+
+axis_y:
+  axis: &axis_y 1
+
+axis_z:
+  axis: &axis_z 2
+
+angle_0:
+  angle: &angle_0 0
+
+angle_90:
+  angle: &angle_90 1
+
+angle_180:
+  angle: &angle_180 2
+
+angle_270:
+  angle: &angle_270 3
+
+inputs:
+  - level: 2
+    actions:
+      - &F
+        cmd: "F"
+        axis: *axis_x
+        start: -1
+        end: -1
+        angle: *angle_90
+      - &F2
+        cmd: "F2"
+        axis: *axis_x
+        start: -1
+        end: -1
+        angle: *angle_180
+      - &F'
+        cmd: "F'"
+        axis: *axis_x
+        start: -1
+        end: -1
+        angle: *angle_270
+      - &B
+        cmd: "B"
+        axis: *axis_x
+        start: 0
+        end: 0
+        angle: *angle_270
+      - &B2
+        cmd: "B2"
+        axis: *axis_x
+        start: 0
+        end: 0
+        angle: *angle_180
+      - &B'
+        cmd: "B'"
+        axis: *axis_x
+        start: 0
+        end: 0
+        angle: *angle_90
+      - &L
+        cmd: "L"
+        axis: *axis_y
+        start: 0
+        end: 0
+        angle: *angle_270
+      - &L2
+        cmd: "L2"
+        axis: *axis_y
+        start: 0
+        end: 0
+        angle: *angle_180
+      - &L'
+        cmd: "L'"
+        axis: *axis_y
+        start: 0
+        end: 0
+        angle: *angle_90
+      - &R
+        cmd: "R"
+        axis: *axis_y
+        start: -1
+        end: -1
+        angle: *angle_90
+      - &R2
+        cmd: "R2"
+        axis: *axis_y
+        start: -1
+        end: -1
+        angle: *angle_180
+      - &R'
+        cmd: "R'"
+        axis: *axis_y
+        start: -1
+        end: -1
+        angle: *angle_270
+      - &U
+        cmd: "U"
+        axis: *axis_z
+        start: -1
+        end: -1
+        angle: *angle_90
+      - &U2
+        cmd: "U2"
+        axis: *axis_z
+        start: -1
+        end: -1
+        angle: *angle_180
+      - &U'
+        cmd: "U'"
+        axis: *axis_z
+        start: -1
+        end: -1
+        angle: *angle_270
+      - &D
+        cmd: "D"
+        axis: *axis_z
+        start: 0
+        end: 0
+        angle: *angle_270
+      - &D2
+        cmd: "D2"
+        axis: *axis_z
+        start: 0
+        end: 0
+        angle: *angle_180
+      - &D'
+        cmd: "D'"
+        axis: *axis_z
+        start: 0
+        end: 0
+        angle: *angle_90
+
+  - level: 3
+    actions: &level_3
+      - *F
+      - *F2
+      - *F'
+      - *B
+      - *B2
+      - *B'
+      - *L
+      - *L2
+      - *L'
+      - *R
+      - *R2
+      - *R'
+      - *U
+      - *U2
+      - *U'
+      - *D
+      - *D2
+      - *D'
+ 
+  # - level: 4
+  #   actions: &level_4
+
+  # - level: 5
+  #   actions: &level_5
+
+  # - level: 6
+  #   actions: &level_6
+
+  # - level: 7
+  #   actions: &level_7
+
+  # - level: 8
+  #   actions: &level_8
+
+  # - level: 9
+  #   actions: &level_9
+
+  # - level: 10
+  #   actions: &level_10

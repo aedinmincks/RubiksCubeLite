@@ -33,13 +33,13 @@ int main(int argc, char* argv[])
 		else if (cmd == "init") {
 			std::cin >> level;
 
-			if (level >= 1 && level <= 10) {
+			if (level >= 2 && level <= 10) {
 				mc = std::make_shared<CMagicCube>(level);
 
 				std::cout << "level initialize done!\n";
 			}
 			else {
-				printf("The level<%d> should be in the [1, 10] interval.\n", level);
+				printf("The level<%d> should be in the [2, 10] interval.\n", level);
 			}
 		}
 		else if (cmd == "print")
@@ -61,49 +61,6 @@ int main(int argc, char* argv[])
 			std::string s;
 			std::cin >> s;
 
-			for (auto c : s) {
-				switch (c)
-				{
-				case 'R':
-					mc->Rotate(EAxis::y, level - 1, level - 1, EAngle::_90);
-					break;
-				case 'L':
-					mc->Rotate(EAxis::y, 0, 0, EAngle::_270);
-					break;
-				case 'F':
-					mc->Rotate(EAxis::x, level - 1, level - 1, EAngle::_90);
-					break;
-				case 'B':
-					mc->Rotate(EAxis::x, 0, 0, EAngle::_270);
-					break;
-				case 'U':
-					mc->Rotate(EAxis::z, level - 1, level - 1, EAngle::_90);
-					break;
-				case 'D':
-					mc->Rotate(EAxis::z, 0, 0, EAngle::_270);
-					break;
-				case 'r':
-					mc->Rotate(EAxis::y, level - 1, level - 1, EAngle::_270);
-					break;
-				case 'l':
-					mc->Rotate(EAxis::y, 0, 0, EAngle::_90);
-					break;
-				case 'f':
-					mc->Rotate(EAxis::x, level - 1, level - 1, EAngle::_270);
-					break;
-				case 'b':
-					mc->Rotate(EAxis::x, 0, 0, EAngle::_90);
-					break;
-				case 'u':
-					mc->Rotate(EAxis::z, level - 1, level - 1, EAngle::_270);
-					break;
-				case 'd':
-					mc->Rotate(EAxis::z, 0, 0, EAngle::_90);
-					break;
-				default:
-					break;
-				}
-			}
 		}
 		else if (cmd == "serail") {
 			if (mc == nullptr) {
