@@ -1,11 +1,11 @@
 #include "MagicCube.h"
 #include "config.h"
 
+#include <algorithm>
 #include <cassert>
 #include <list>
 #include <queue>
 #include <random>
-#include <algorithm>
 
 void CMagicCube::InitColors()
 {
@@ -113,17 +113,17 @@ std::string CMagicCube::RandomRotate(int n)
     int m = CConfig::InputsMap[level_].size();
 
     std::random_device rd;
-	std::mt19937 mt(rd());
+    std::mt19937 mt(rd());
 
     std::string ans;
 
     for (int i = 0; i < n; i++)
-    {    
+    {
         int r = mt() % m;
-       
+
         auto it = CConfig::InputsMap[level_].begin();
         std::advance(it, r);
-        
+
         ans += it->first;
 
         Rotate((EAxis)it->second.axis, it->second.start, it->second.end, (EAngle)it->second.angle);

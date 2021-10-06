@@ -72,8 +72,7 @@ class CCubeLogic
   public:
     static bool checkColors(const std::string &str, int level);
 
-    static void RotateArray(std::string &colors, int level, std::vector<int> &arr,
-                            EAngle angle);
+    static void RotateArray(std::string &colors, int level, std::vector<int> &arr, EAngle angle);
 
     static void Rotate2DArray(char *colors, int level, EAngle angle);
 

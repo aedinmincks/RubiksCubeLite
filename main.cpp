@@ -4,9 +4,9 @@
 #include "MagicCube.h"
 #include "config.h"
 
-#include <regex>
 #include <cassert>
 #include <ctime>
+#include <regex>
 
 #define MAXLEVEL (3)
 
@@ -143,11 +143,12 @@ int main(int argc, char *argv[])
 
             time_t start = time(0);
 
-            std::cout << CCubeLogic::FindShortestPath(mc->GetColors(), CConfig::SourceColorsMap[mc->level_], mc->level_) << std::endl;
+            std::cout << CCubeLogic::FindShortestPath(mc->GetColors(), CConfig::SourceColorsMap[mc->level_], mc->level_)
+                      << std::endl;
 
             time_t end = time(0);
 
-            std::cout << "Time used (in seconds) :" << end - start << std::endl; 
+            std::cout << "Time used (in seconds) :" << end - start << std::endl;
         }
         else if (cmd == "random")
         {
