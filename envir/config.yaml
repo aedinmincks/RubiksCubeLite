@@ -27,120 +27,138 @@ angle_180:
 angle_270:
   angle: &angle_270 3
 
+action_F: &F
+  cmd: "F"
+  axis: *axis_x
+  start: -1
+  end: -1
+  angle: *angle_90
+action_F2: &F2
+  cmd: "F2"
+  axis: *axis_x
+  start: -1
+  end: -1
+  angle: *angle_180
+action_F': &F'
+  cmd: "F'"
+  axis: *axis_x
+  start: -1
+  end: -1
+  angle: *angle_270
+action_B: &B
+  cmd: "B"
+  axis: *axis_x
+  start: 0
+  end: 0
+  angle: *angle_270
+action_B2: &B2
+  cmd: "B2"
+  axis: *axis_x
+  start: 0
+  end: 0
+  angle: *angle_180
+action_B': &B'
+  cmd: "B'"
+  axis: *axis_x
+  start: 0
+  end: 0
+  angle: *angle_90
+action_L: &L
+  cmd: "L"
+  axis: *axis_y
+  start: 0
+  end: 0
+  angle: *angle_270
+action_L2: &L2
+  cmd: "L2"
+  axis: *axis_y
+  start: 0
+  end: 0
+  angle: *angle_180
+action_L': &L'
+  cmd: "L'"
+  axis: *axis_y
+  start: 0
+  end: 0
+  angle: *angle_90
+action_R: &R
+  cmd: "R"
+  axis: *axis_y
+  start: -1
+  end: -1
+  angle: *angle_90
+action_R2: &R2
+  cmd: "R2"
+  axis: *axis_y
+  start: -1
+  end: -1
+  angle: *angle_180
+action_R': &R'
+  cmd: "R'"
+  axis: *axis_y
+  start: -1
+  end: -1
+  angle: *angle_270
+action_U: &U
+  cmd: "U"
+  axis: *axis_z
+  start: -1
+  end: -1
+  angle: *angle_90
+action_U2: &U2
+  cmd: "U2"
+  axis: *axis_z
+  start: -1
+  end: -1
+  angle: *angle_180
+action_U': &U'
+  cmd: "U'"
+  axis: *axis_z
+  start: -1
+  end: -1
+  angle: *angle_270
+action_D: &D
+  cmd: "D"
+  axis: *axis_z
+  start: 0
+  end: 0
+  angle: *angle_270
+action_D2: &D2
+  cmd: "D2"
+  axis: *axis_z
+  start: 0
+  end: 0
+  angle: *angle_180
+action_D': &D'
+  cmd: "D'"
+  axis: *axis_z
+  start: 0
+  end: 0
+  angle: *angle_90
+
 inputs:
   - level: 2
     actions:
-      - &F
-        cmd: "F"
-        axis: *axis_x
-        start: -1
-        end: -1
-        angle: *angle_90
-      - &F2
-        cmd: "F2"
-        axis: *axis_x
-        start: -1
-        end: -1
-        angle: *angle_180
-      - &F'
-        cmd: "F'"
-        axis: *axis_x
-        start: -1
-        end: -1
-        angle: *angle_270
-      - &B
-        cmd: "B"
-        axis: *axis_x
-        start: 0
-        end: 0
-        angle: *angle_270
-      - &B2
-        cmd: "B2"
-        axis: *axis_x
-        start: 0
-        end: 0
-        angle: *angle_180
-      - &B'
-        cmd: "B'"
-        axis: *axis_x
-        start: 0
-        end: 0
-        angle: *angle_90
-      - &L
-        cmd: "L"
-        axis: *axis_y
-        start: 0
-        end: 0
-        angle: *angle_270
-      - &L2
-        cmd: "L2"
-        axis: *axis_y
-        start: 0
-        end: 0
-        angle: *angle_180
-      - &L'
-        cmd: "L'"
-        axis: *axis_y
-        start: 0
-        end: 0
-        angle: *angle_90
-      - &R
-        cmd: "R"
-        axis: *axis_y
-        start: -1
-        end: -1
-        angle: *angle_90
-      - &R2
-        cmd: "R2"
-        axis: *axis_y
-        start: -1
-        end: -1
-        angle: *angle_180
-      - &R'
-        cmd: "R'"
-        axis: *axis_y
-        start: -1
-        end: -1
-        angle: *angle_270
-      - &U
-        cmd: "U"
-        axis: *axis_z
-        start: -1
-        end: -1
-        angle: *angle_90
-      - &U2
-        cmd: "U2"
-        axis: *axis_z
-        start: -1
-        end: -1
-        angle: *angle_180
-      - &U'
-        cmd: "U'"
-        axis: *axis_z
-        start: -1
-        end: -1
-        angle: *angle_270
-      - &D
-        cmd: "D"
-        axis: *axis_z
-        start: 0
-        end: 0
-        angle: *angle_270
-      - &D2
-        cmd: "D2"
-        axis: *axis_z
-        start: 0
-        end: 0
-        angle: *angle_180
-      - &D'
-        cmd: "D'"
-        axis: *axis_z
-        start: 0
-        end: 0
-        angle: *angle_90
-
+      - *F
+      - *F2
+      - *F'
+      - *B
+      - *B2
+      - *B'
+      - *L
+      - *L2
+      - *L'
+      - *R
+      - *R2
+      - *R'
+      - *U
+      - *U2
+      - *U'
+      - *D
+      - *D2
+      - *D'
   - level: 3
-    actions: &level_3
+    actions:
       - *F
       - *F2
       - *F'
