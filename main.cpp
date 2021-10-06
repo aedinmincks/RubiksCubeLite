@@ -5,6 +5,10 @@
 #include "config.h"
 
 #include <regex>
+#include <cassert>
+#include <ctime>
+
+#define MAXLEVEL (3)
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +20,8 @@ int main(int argc, char *argv[])
 
     CConfig::Load(std::filesystem::path(argv[1]));
 
-    CConfig::InitRotateMap(10);
+    CConfig::InitRotateMap(MAXLEVEL);
+    CConfig::InitSourceColorsMap(MAXLEVEL);
 
     std::shared_ptr<CMagicCube> mc;
 
@@ -41,7 +46,7 @@ int main(int argc, char *argv[])
             int level = 0;
             std::cin >> level;
 
-            if (level >= 2 && level <= 10)
+            if (level >= 2 && level <= MAXLEVEL)
             {
                 mc = std::make_shared<CMagicCube>(level);
 
@@ -49,10 +54,10 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("The level<%d> should be in the [2, 10] interval.\n", level);
+                printf("The level<%d> should be in the [2, %d] interval.\n", level, MAXLEVEL);
             }
         }
-        else if (cmd == "print")
+        else if (cmd == "show")
         {
             if (mc == nullptr)
             {
@@ -60,7 +65,7 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            mc->print();
+            mc->show();
         }
         else if (cmd == "do")
         {
@@ -81,6 +86,9 @@ int main(int argc, char *argv[])
 
                 auto &input = CConfig::InputsMap[mc->level_][sm.str()];
 
+                assert(input.axis >= (int)EAxis::x && input.axis <= (int)EAxis::z);
+                assert(input.angle >= (int)EAngle::_0 && input.angle <= (int)EAngle::_270);
+
                 mc->Rotate((EAxis)input.axis, input.start, input.end, (EAngle)input.angle);
 
                 s = sm.suffix();
@@ -94,7 +102,7 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            std::cout << CCodec::Serialization(mc->GetColors()) << std::endl;
+            std::cout << mc->GetColors() << std::endl;
         }
         else if (cmd == "set")
         {
@@ -107,7 +115,7 @@ int main(int argc, char *argv[])
             std::string s;
             std::cin >> s;
 
-            if (!CCodec::checkColors(s, mc->level_))
+            if (!CCubeLogic::checkColors(s, mc->level_))
             {
                 std::cout << "Input format error!\n";
                 continue;
@@ -115,15 +123,13 @@ int main(int argc, char *argv[])
 
             std::cout << "old\n" << std::endl;
 
-            mc->print();
+            mc->show();
 
-            auto c = CCodec::Deserialization(s);
-
-            mc->SetColors(c);
+            mc->SetColors(s);
 
             std::cout << "new\n" << std::endl;
 
-            mc->print();
+            mc->show();
 
             std::cout << "done\n" << std::endl;
         }
@@ -134,7 +140,31 @@ int main(int argc, char *argv[])
                 std::cout << "please initialize first!\n";
                 continue;
             }
-            // to do
+
+            time_t start = time(0);
+
+            std::cout << CCubeLogic::FindShortestPath(mc->GetColors(), CConfig::SourceColorsMap[mc->level_], mc->level_) << std::endl;
+
+            time_t end = time(0);
+
+            std::cout << "Time used (in seconds) :" << end - start << std::endl; 
+        }
+        else if (cmd == "random")
+        {
+            if (mc == nullptr)
+            {
+                std::cout << "please initialize first!\n";
+                continue;
+            }
+
+            int n;
+            std::cin >> n;
+
+            std::string s = mc->RandomRotate(n);
+
+            std::cout << s << std::endl;
+
+            mc->show();
         }
     }
 

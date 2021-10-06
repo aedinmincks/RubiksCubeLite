@@ -2,17 +2,21 @@
 #include "config.h"
 
 #include <cassert>
+#include <list>
+#include <queue>
+#include <random>
+#include <algorithm>
 
 void CMagicCube::InitColors()
 {
-    colors_.assign(6, std::vector<std::vector<char>>(level_, std::vector<char>(level_, ' ')));
+    colors_.assign(6 * level_ * level_, ' ');
     for (int i = (int)EDirection::up; i <= (int)EDirection::back; i++)
     {
         for (int j = 0; j < level_; j++)
         {
             for (int k = 0; k < level_; k++)
             {
-                colors_[i][j][k] = CConfig::Dir2ColorMap[i];
+                colors_[i * level_ * level_ + j * level_ + k] = CConfig::Dir2ColorMap[i];
             }
         }
     }
@@ -30,33 +34,14 @@ CMagicCube::CMagicCube(int level)
     InitColors();
 }
 
-bool CMagicCube::SetColors(std::vector<std::vector<std::vector<char>>> &colors)
+bool CMagicCube::SetColors(std::string &colors)
 {
-    if (colors.size() != 6)
+    if (colors.size() != 6 * level_ * level_)
     {
         return false;
     }
 
-    if (colors[0].size() != level_)
-    {
-        return false;
-    }
-
-    if (colors[0][0].size() != level_)
-    {
-        return false;
-    }
-
-    for (int i = (int)EDirection::up; i <= (int)EDirection::back; i++)
-    {
-        for (int j = 0; j < level_; j++)
-        {
-            for (int k = 0; k < level_; k++)
-            {
-                colors_[i][j][k] = colors[i][j][k];
-            }
-        }
-    }
+    colors_ = colors;
 
     return true;
 }
@@ -68,58 +53,12 @@ bool CMagicCube::Rotate(EAxis axis, int start, int end, EAngle angle)
         return false;
     }
 
-    auto m = CConfig::RotateMap[level_];
-
-    for (int i = start; i <= end; i++)
-    {
-        auto k = std::make_pair((int)axis, i);
-        if (m.find(k) != m.end())
-        {
-            auto &v = m[k];
-            CCubeLogic::RotateArray(colors_, level_, v, angle);
-        }
-    }
-
-    if (start == 0)
-    {
-        switch (axis)
-        {
-        case EAxis::x:
-            CCubeLogic::Rotate2DArray(colors_[(int)EDirection::back], level_, (EAngle)((4 - (int)angle) % 4));
-            break;
-        case EAxis::y:
-            CCubeLogic::Rotate2DArray(colors_[(int)EDirection::left], level_, (EAngle)((4 - (int)angle) % 4));
-            break;
-        case EAxis::z:
-            CCubeLogic::Rotate2DArray(colors_[(int)EDirection::down], level_, (EAngle)((4 - (int)angle) % 4));
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (end == level_ - 1)
-    {
-        switch (axis)
-        {
-        case EAxis::x:
-            CCubeLogic::Rotate2DArray(colors_[(int)EDirection::front], level_, angle);
-            break;
-        case EAxis::y:
-            CCubeLogic::Rotate2DArray(colors_[(int)EDirection::right], level_, angle);
-            break;
-        case EAxis::z:
-            CCubeLogic::Rotate2DArray(colors_[(int)EDirection::up], level_, angle);
-            break;
-        default:
-            break;
-        }
-    }
+    colors_ = CCubeLogic::RotateColors(colors_, level_, axis, start, end, angle);
 
     return true;
 }
 
-void CMagicCube::print()
+void CMagicCube::show()
 {
     int n = level_;
 
@@ -130,7 +69,7 @@ void CMagicCube::print()
         std::cout << std::string(n, ' ');
         for (int j = 0; j < n; j++)
         {
-            std::cout << colors_[(uint8_t)EDirection::back][i][j];
+            std::cout << colors_[(uint8_t)EDirection::back * n * n + i * n + j];
         }
         std::cout << std::endl;
     }
@@ -139,19 +78,19 @@ void CMagicCube::print()
     {
         for (int j = 0; j < n; j++)
         {
-            std::cout << colors_[(uint8_t)EDirection::left][i][j];
+            std::cout << colors_[(uint8_t)EDirection::left * n * n + i * n + j];
         }
         for (int j = 0; j < n; j++)
         {
-            std::cout << colors_[(uint8_t)EDirection::up][i][j];
+            std::cout << colors_[(uint8_t)EDirection::up * n * n + i * n + j];
         }
         for (int j = 0; j < n; j++)
         {
-            std::cout << colors_[(uint8_t)EDirection::right][i][j];
+            std::cout << colors_[(uint8_t)EDirection::right * n * n + i * n + j];
         }
         for (int j = 0; j < n; j++)
         {
-            std::cout << colors_[(uint8_t)EDirection::down][i][j];
+            std::cout << colors_[(uint8_t)EDirection::down * n * n + i * n + j];
         }
         std::cout << std::endl;
     }
@@ -161,7 +100,7 @@ void CMagicCube::print()
         std::cout << std::string(n, ' ');
         for (int j = 0; j < n; j++)
         {
-            std::cout << colors_[(uint8_t)EDirection::front][i][j];
+            std::cout << colors_[(uint8_t)EDirection::front * n * n + i * n + j];
         }
         std::cout << std::endl;
     }
@@ -169,55 +108,31 @@ void CMagicCube::print()
     std::cout << std::endl;
 }
 
-std::string CCodec::Serialization(const std::vector<std::vector<std::vector<char>>> &colors)
+std::string CMagicCube::RandomRotate(int n)
 {
-    std::string str;
+    int m = CConfig::InputsMap[level_].size();
 
-    for (auto &i : colors)
-    {
-        for (auto &j : i)
-        {
-            for (auto &k : j)
-            {
-                str += k;
-            }
-        }
+    std::random_device rd;
+	std::mt19937 mt(rd());
+
+    std::string ans;
+
+    for (int i = 0; i < n; i++)
+    {    
+        int r = mt() % m;
+       
+        auto it = CConfig::InputsMap[level_].begin();
+        std::advance(it, r);
+        
+        ans += it->first;
+
+        Rotate((EAxis)it->second.axis, it->second.start, it->second.end, (EAngle)it->second.angle);
     }
 
-    return str;
+    return ans;
 }
 
-std::vector<std::vector<std::vector<char>>> CCodec::Deserialization(const std::string &str)
-{
-    int level = std::sqrt(str.size() / 6);
-
-    return Deserialization(str, level);
-}
-
-std::vector<std::vector<std::vector<char>>> CCodec::Deserialization(const std::string &str, int level)
-{
-    assert(level > 0);
-    assert(str.size() >= level * level * 6);
-
-    std::vector<std::vector<std::vector<char>>> colors;
-
-    colors.assign(6, std::vector<std::vector<char>>(level, std::vector<char>(level, ' ')));
-
-    for (int i = 0; i < 6; i++)
-    {
-        for (int j = 0; j < level; j++)
-        {
-            for (int k = 0; k < level; k++)
-            {
-                colors[i][j][k] = str[i * level * level + j * level + k];
-            }
-        }
-    }
-
-    return colors;
-}
-
-bool CCodec::checkColors(const std::string &str, int level)
+bool CCubeLogic::checkColors(const std::string &str, int level)
 {
     if (str.size() != level * level * 6)
     {
@@ -241,8 +156,7 @@ bool CCodec::checkColors(const std::string &str, int level)
     return true;
 }
 
-void CCubeLogic::RotateArray(std::vector<std::vector<std::vector<char>>> &colors, int level, std::vector<int> &arr,
-                             EAngle angle)
+void CCubeLogic::RotateArray(std::string &colors, int level, std::vector<int> &arr, EAngle angle)
 {
     assert(level > 0);
     assert(arr.size() == level * 4);
@@ -259,44 +173,30 @@ void CCubeLogic::RotateArray(std::vector<std::vector<std::vector<char>>> &colors
     for (int i = arr.size() - k; i < arr.size(); i++)
     {
         int n = arr[i];
-        int d = n / (level * level);
-        int x = n % (level * level) / level;
-        int y = n % (level * level) % level;
 
-        temp.emplace_back(colors[d][x][y]);
+        temp.emplace_back(colors[n]);
     }
 
     for (int i = arr.size() - 1; i >= k; i--)
     {
         int n = arr[i];
-        int d = n / (level * level);
-        int x = n % (level * level) / level;
-        int y = n % (level * level) % level;
-
         int n1 = arr[i - k];
-        int d1 = n1 / (level * level);
-        int x1 = n1 % (level * level) / level;
-        int y1 = n1 % (level * level) % level;
 
-        colors[d][x][y] = colors[d1][x1][y1];
+        colors[n] = colors[n1];
     }
 
     for (int i = 0; i < k; i++)
     {
         int n = arr[i];
-        int d = n / (level * level);
-        int x = n % (level * level) / level;
-        int y = n % (level * level) % level;
 
-        colors[d][x][y] = temp[i];
+        colors[n] = temp[i];
     }
 }
 
-void CCubeLogic::Rotate2DArray(std::vector<std::vector<char>> &arrs, int level, EAngle angle)
+void CCubeLogic::Rotate2DArray(char *arrs, int level, EAngle angle)
 {
     assert(level > 0);
-    assert(arrs.size() == level);
-    assert(arrs[0].size() == level);
+    assert(arrs);
 
     if (angle == EAngle::_0)
     {
@@ -308,11 +208,11 @@ void CCubeLogic::Rotate2DArray(std::vector<std::vector<char>> &arrs, int level, 
         {
             for (int j = 0; j < level - level / 2; j++)
             {
-                char temp = arrs[i][j];
-                arrs[i][j] = arrs[level - 1 - j][i];
-                arrs[level - 1 - j][i] = arrs[level - 1 - i][level - 1 - j];
-                arrs[level - 1 - i][level - 1 - j] = arrs[j][level - 1 - i];
-                arrs[j][level - 1 - i] = temp;
+                char temp = arrs[i * level + j];
+                arrs[i * level + j] = arrs[(level - 1 - j) * level + i];
+                arrs[(level - 1 - j) * level + i] = arrs[(level - 1 - i) * level + (level - 1 - j)];
+                arrs[(level - 1 - i) * level + (level - 1 - j)] = arrs[j * level + (level - 1 - i)];
+                arrs[j * level + (level - 1 - i)] = temp;
             }
         }
     }
@@ -322,8 +222,8 @@ void CCubeLogic::Rotate2DArray(std::vector<std::vector<char>> &arrs, int level, 
         {
             for (int j = 0; j < level - level / 2; j++)
             {
-                std::swap(arrs[i][j], arrs[level - 1 - i][level - 1 - j]);
-                std::swap(arrs[j][level - 1 - i], arrs[level - 1 - j][i]);
+                std::swap(arrs[i * level + j], arrs[(level - 1 - i) * level + (level - 1 - j)]);
+                std::swap(arrs[j * level + (level - 1 - i)], arrs[(level - 1 - j) * level + i]);
             }
         }
     }
@@ -333,11 +233,11 @@ void CCubeLogic::Rotate2DArray(std::vector<std::vector<char>> &arrs, int level, 
         {
             for (int j = 0; j < level - level / 2; j++)
             {
-                char temp = arrs[i][j];
-                arrs[i][j] = arrs[j][level - 1 - i];
-                arrs[j][level - 1 - i] = arrs[level - 1 - i][level - 1 - j];
-                arrs[level - 1 - i][level - 1 - j] = arrs[level - 1 - j][i];
-                arrs[level - 1 - j][i] = temp;
+                char temp = arrs[i * level + j];
+                arrs[i * level + j] = arrs[j * level + (level - 1 - i)];
+                arrs[j * level + (level - 1 - i)] = arrs[(level - 1 - i) * level + (level - 1 - j)];
+                arrs[(level - 1 - i) * level + (level - 1 - j)] = arrs[(level - 1 - j) * level + i];
+                arrs[(level - 1 - j) * level + i] = temp;
             }
         }
     }
@@ -348,8 +248,105 @@ std::string CCubeLogic::RotateColors(const std::string &str, int level, EAxis ax
     assert(level > 0);
     assert(start >= 0 && start < level);
     assert(end >= 0 && end < level);
+    assert(str.size() == 6 * level * level);
 
-    std::string ans;
+    std::string colors(str);
 
-    return ans;
+    auto m = CConfig::RotateMap[level];
+
+    for (int i = start; i <= end; i++)
+    {
+        auto k = std::make_pair((int)axis, i);
+        if (m.find(k) != m.end())
+        {
+            auto &v = m[k];
+            CCubeLogic::RotateArray(colors, level, v, angle);
+        }
+    }
+
+    if (start == 0)
+    {
+        switch (axis)
+        {
+        case EAxis::x:
+            CCubeLogic::Rotate2DArray(&colors[(int)EDirection::back * level * level], level,
+                                      (EAngle)((4 - (int)angle) % 4));
+            break;
+        case EAxis::y:
+            CCubeLogic::Rotate2DArray(&colors[(int)EDirection::left * level * level], level,
+                                      (EAngle)((4 - (int)angle) % 4));
+            break;
+        case EAxis::z:
+            CCubeLogic::Rotate2DArray(&colors[(int)EDirection::down * level * level], level,
+                                      (EAngle)((4 - (int)angle) % 4));
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (end == level - 1)
+    {
+        switch (axis)
+        {
+        case EAxis::x:
+            CCubeLogic::Rotate2DArray(&colors[(int)EDirection::front * level * level], level, angle);
+            break;
+        case EAxis::y:
+            CCubeLogic::Rotate2DArray(&colors[(int)EDirection::right * level * level], level, angle);
+            break;
+        case EAxis::z:
+            CCubeLogic::Rotate2DArray(&colors[(int)EDirection::up * level * level], level, angle);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return colors;
+}
+
+std::string CCubeLogic::FindShortestPath(const std::string &src, const std::string &dst, int level)
+{
+    std::map<std::string, std::string> path;
+
+    std::queue<std::string> q;
+
+    path[src] = {};
+    q.push(src);
+
+    int t = 0;
+
+    while (!q.empty())
+    {
+        int n = q.size();
+        t++;
+
+        while (n--)
+        {
+            auto s = q.front();
+            q.pop();
+
+            for (auto &[k, v] : CConfig::InputsMap[level])
+            {
+                assert(v.axis >= (int)EAxis::x && v.axis <= (int)EAxis::z);
+                assert(v.angle >= (int)EAngle::_0 && v.angle <= (int)EAngle::_270);
+
+                std::string s1 = CCubeLogic::RotateColors(s, level, (EAxis)v.axis, v.start, v.end, (EAngle)v.angle);
+
+                if (s1 == dst)
+                {
+                    return path[s] + k;
+                }
+
+                if (path.find(s1) == path.end())
+                {
+                    path[s1] = path[s] + k;
+                    q.push(s1);
+                }
+            }
+        }
+    }
+
+    return "impossible";
 }

@@ -10,6 +10,7 @@
 std::map<int, char> CConfig::Dir2ColorMap;
 std::map<int, std::map<std::string, SAction>> CConfig::InputsMap;
 std::map<int, std::map<std::pair<int, int>, std::vector<int>>> CConfig::RotateMap;
+std::map<int, std::string> CConfig::SourceColorsMap;
 
 void CConfig::Load(std::filesystem::path p)
 {
@@ -163,6 +164,24 @@ void CConfig::InitRotateMap(int max_level)
             for (int j = 0; j < l; j++)
             {
                 v.emplace_back((int)EDirection::front * l * l + (l - 1 - i) * l + (l - 1 - j));
+            }
+        }
+    }
+}
+
+void CConfig::InitSourceColorsMap(int max_level)
+{
+    SourceColorsMap.clear();
+
+    for (int l = 1; l < max_level; l++)
+    {
+        SourceColorsMap[l].assign(6 * l * l, ' ');
+
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < l * l; j++)
+            {
+                SourceColorsMap[l][i * l * l + j] = CConfig::Dir2ColorMap[i];
             }
         }
     }

@@ -45,7 +45,7 @@ class CMagicCube
 {
   public:
     int level_;
-    std::vector<std::vector<std::vector<char>>> colors_;
+    std::string colors_;
 
   private:
     void InitColors();
@@ -53,37 +53,31 @@ class CMagicCube
   public:
     CMagicCube(int level);
 
-    bool SetColors(std::vector<std::vector<std::vector<char>>> &colors);
+    bool SetColors(std::string &colors);
 
-    std::vector<std::vector<std::vector<char>>> &GetColors(void)
+    std::string &GetColors(void)
     {
         return colors_;
     };
 
     bool Rotate(EAxis axis, int start, int end, EAngle angle);
 
-    void print();
-};
+    void show();
 
-class CCodec
-{
-  public:
-    static std::string Serialization(const std::vector<std::vector<std::vector<char>>> &colors);
-
-    static std::vector<std::vector<std::vector<char>>> Deserialization(const std::string &str);
-
-    static std::vector<std::vector<std::vector<char>>> Deserialization(const std::string &str, int level);
-
-    static bool checkColors(const std::string &str, int level);
+    std::string RandomRotate(int n);
 };
 
 class CCubeLogic
 {
   public:
-    static void RotateArray(std::vector<std::vector<std::vector<char>>> &colors, int level, std::vector<int> &arr,
+    static bool checkColors(const std::string &str, int level);
+
+    static void RotateArray(std::string &colors, int level, std::vector<int> &arr,
                             EAngle angle);
 
-    static void Rotate2DArray(std::vector<std::vector<char>> &arrs, int level, EAngle angle);
+    static void Rotate2DArray(char *colors, int level, EAngle angle);
 
     static std::string RotateColors(const std::string &str, int level, EAxis axis, int start, int end, EAngle angle);
+
+    static std::string FindShortestPath(const std::string &src, const std::string &dst, int level);
 };
