@@ -41,7 +41,7 @@ enum class EAngle : uint8_t
     _270,
 };
 
-class CMagicCube
+class CRubiksCube
 {
   public:
     int level_;
@@ -51,7 +51,7 @@ class CMagicCube
     void InitColors();
 
   public:
-    CMagicCube(int level);
+    CRubiksCube(int level);
 
     bool SetColors(std::string &colors);
 

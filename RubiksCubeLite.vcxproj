@@ -25,6 +25,7 @@
     <ProjectGuid>{48ea998e-fd18-4730-a66e-fabe63049141}</ProjectGuid>
     <RootNamespace>MagicCubeLite</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>RubiksCubeLite</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -145,12 +146,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="config.cpp" />
-    <ClCompile Include="MagicCube.cpp" />
+    <ClCompile Include="RubiksCube.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
-    <ClInclude Include="MagicCube.h" />
+    <ClInclude Include="RubiksCube.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

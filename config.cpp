@@ -1,5 +1,5 @@
 #include "config.h"
-#include "MagicCube.h"
+#include "RubiksCube.h"
 
 #include <cassert>
 #include <fstream>

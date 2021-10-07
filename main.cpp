@@ -1,7 +1,7 @@
 ﻿// main.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include "MagicCube.h"
+#include "RubiksCube.h"
 #include "config.h"
 
 #include <cassert>
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     CConfig::InitRotateMap(MAXLEVEL);
     CConfig::InitSourceColorsMap(MAXLEVEL);
 
-    std::shared_ptr<CMagicCube> mc;
+    std::shared_ptr<CRubiksCube> mc;
 
     while (1)
     {
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
             if (level >= 2 && level <= MAXLEVEL)
             {
-                mc = std::make_shared<CMagicCube>(level);
+                mc = std::make_shared<CRubiksCube>(level);
 
                 std::cout << "level initialize done!\n";
             }

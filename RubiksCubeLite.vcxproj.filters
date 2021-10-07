@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="MagicCube.cpp">
+    <ClCompile Include="RubiksCube.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="config.cpp">
@@ -26,7 +26,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MagicCube.h">
+    <ClInclude Include="RubiksCube.h">
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="config.h">

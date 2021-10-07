@@ -1,4 +1,4 @@
-#include "MagicCube.h"
+#include "RubiksCube.h"
 #include "config.h"
 
 #include <algorithm>
@@ -7,7 +7,7 @@
 #include <queue>
 #include <random>
 
-void CMagicCube::InitColors()
+void CRubiksCube::InitColors()
 {
     colors_.assign(6 * level_ * level_, ' ');
     for (int i = (int)EDirection::up; i <= (int)EDirection::back; i++)
@@ -22,7 +22,7 @@ void CMagicCube::InitColors()
     }
 }
 
-CMagicCube::CMagicCube(int level)
+CRubiksCube::CRubiksCube(int level)
 {
     if (level < 1)
     {
@@ -34,7 +34,7 @@ CMagicCube::CMagicCube(int level)
     InitColors();
 }
 
-bool CMagicCube::SetColors(std::string &colors)
+bool CRubiksCube::SetColors(std::string &colors)
 {
     if (colors.size() != 6 * level_ * level_)
     {
@@ -46,7 +46,7 @@ bool CMagicCube::SetColors(std::string &colors)
     return true;
 }
 
-bool CMagicCube::Rotate(EAxis axis, int start, int end, EAngle angle)
+bool CRubiksCube::Rotate(EAxis axis, int start, int end, EAngle angle)
 {
     if (start < 0 || start >= level_ || end < 0 || end >= level_)
     {
@@ -58,7 +58,7 @@ bool CMagicCube::Rotate(EAxis axis, int start, int end, EAngle angle)
     return true;
 }
 
-void CMagicCube::show()
+void CRubiksCube::show()
 {
     int n = level_;
 
@@ -108,7 +108,7 @@ void CMagicCube::show()
     std::cout << std::endl;
 }
 
-std::string CMagicCube::RandomRotate(int n)
+std::string CRubiksCube::RandomRotate(int n)
 {
     int m = CConfig::InputsMap[level_].size();
 

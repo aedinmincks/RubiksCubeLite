@@ -1,1 +1,1 @@
-# MagicCubeLite
+# RubiksCubeLite
