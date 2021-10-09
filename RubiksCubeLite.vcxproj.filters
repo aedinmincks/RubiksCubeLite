@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\config.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RubiksCube.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="config.cpp">
+    <ClCompile Include="src\RubiksCube.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RubiksCube.h">
+    <ClInclude Include="src\config.h">
       <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
+    <ClInclude Include="src\RubiksCube.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
