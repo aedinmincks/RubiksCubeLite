@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::shared_ptr<CRubiksCube> mc = std::make_shared<CRubiksCube>(CConfig::size);
+    CRubiksCube mc(CConfig::size);
 
     while (1)
     {
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "show")
         {
-            mc->show();
+            mc.show();
         }
         else if (cmd == "do")
         {
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "get")
         {
-            CCubeLogic::PrintFacelets(mc->GetFacelets());
+            CCubeLogic::PrintFacelets(mc.GetFacelets());
         }
         else if (cmd == "set")
         {
@@ -82,14 +82,14 @@ int main(int argc, char *argv[])
             std::smatch sm;
             while (std::regex_search(s, sm, r))
             {
-                std::cout << sm.str() << std::endl;
+                //std::cout << sm.str() << std::endl;
 
                 v.emplace_back(std::stoi(sm.str()));
 
                 s = sm.suffix();
             }
             
-            if (mc->SetFacelets(v))
+            if (mc.SetFacelets(v))
             {
                 std::cout << "done!" << std::endl;
             }
@@ -114,11 +114,11 @@ int main(int argc, char *argv[])
             int n;
             std::cin >> n;
 
-            std::string s = mc->RandomRotate(n);
+            std::string s = mc.RandomRotate(n);
 
             std::cout << s << std::endl;
 
-            mc->show();
+            mc.show();
         }
     }
 
