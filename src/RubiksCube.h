@@ -15,7 +15,7 @@ class CRubiksCube
   public:
     CRubiksCube(int size);
 
-    bool SetColors(std::vector<int> &facelets);
+    bool SetFacelets(std::vector<int> &facelets);
 
     std::vector<int> &GetFacelets(void)
     {

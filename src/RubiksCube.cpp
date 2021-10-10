@@ -20,7 +20,7 @@ CRubiksCube::CRubiksCube(int size)
     }
 }
 
-bool CRubiksCube::SetColors(std::vector<int> &facelets)
+bool CRubiksCube::SetFacelets(std::vector<int> &facelets)
 {
     if (facelets.size() != size_)
     {
@@ -94,7 +94,7 @@ void CCubeLogic::PrintFacelets(std::vector<int> &facelets)
         std::cout << facelets[i];
     }
 
-    std::cout << "]" << std::endl;
+    std::cout << "]" << std::endl << std::endl;
 }
 
 bool CCubeLogic::checkColors(const std::string &str, int level)

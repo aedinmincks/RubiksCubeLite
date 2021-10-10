@@ -73,26 +73,30 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "set")
         {
-            /*std::string s;
+            std::string s;
             std::cin >> s;
 
-            if (!CCubeLogic::checkColors(s, mc->level_))
+            std::vector<int> v;
+
+            std::regex r("([0-9]+)");
+            std::smatch sm;
+            while (std::regex_search(s, sm, r))
             {
-                std::cout << "Input format error!\n";
-                continue;
+                std::cout << sm.str() << std::endl;
+
+                v.emplace_back(std::stoi(sm.str()));
+
+                s = sm.suffix();
             }
-
-            std::cout << "old\n" << std::endl;
-
-            mc->show();
-
-            mc->SetColors(s);
-
-            std::cout << "new\n" << std::endl;
-
-            mc->show();
-
-            std::cout << "done\n" << std::endl;*/
+            
+            if (mc->SetFacelets(v))
+            {
+                std::cout << "done!" << std::endl;
+            }
+            else
+            {
+                std::cout << "error!" << std::endl;
+            }
         }
         else if (cmd == "rec")
         {
