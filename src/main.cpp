@@ -18,12 +18,13 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    CConfig::Load(std::filesystem::path(argv[1]));
+    if (!CConfig::Load(std::filesystem::path(argv[1])))
+    {
+        printf("yaml load error");
+        return 1;
+    }
 
-    CConfig::InitRotateMap(MAXLEVEL);
-    CConfig::InitSourceColorsMap(MAXLEVEL);
-
-    std::shared_ptr<CRubiksCube> mc;
+    std::shared_ptr<CRubiksCube> mc = std::make_shared<CRubiksCube>(CConfig::size);
 
     while (1)
     {
@@ -41,41 +42,13 @@ int main(int argc, char *argv[])
         {
             std::cout << "just see code.\n";
         }
-        else if (cmd == "init")
-        {
-            int level = 0;
-            std::cin >> level;
-
-            if (level >= 2 && level <= MAXLEVEL)
-            {
-                mc = std::make_shared<CRubiksCube>(level);
-
-                std::cout << "level initialize done!\n";
-            }
-            else
-            {
-                printf("The level<%d> should be in the [2, %d] interval.\n", level, MAXLEVEL);
-            }
-        }
         else if (cmd == "show")
         {
-            if (mc == nullptr)
-            {
-                std::cout << "please initialize first!\n";
-                continue;
-            }
-
             mc->show();
         }
         else if (cmd == "do")
         {
-            if (mc == nullptr)
-            {
-                std::cout << "please initialize first!\n";
-                continue;
-            }
-
-            std::string s;
+            /*std::string s;
             std::cin >> s;
 
             std::regex r(CConfig::GetRegex(mc->level_));
@@ -92,27 +65,15 @@ int main(int argc, char *argv[])
                 mc->Rotate((EAxis)input.axis, input.start, input.end, (EAngle)input.angle);
 
                 s = sm.suffix();
-            }
+            }*/
         }
         else if (cmd == "get")
         {
-            if (mc == nullptr)
-            {
-                std::cout << "please initialize first!\n";
-                continue;
-            }
-
-            std::cout << mc->GetColors() << std::endl;
+            CCubeLogic::PrintFacelets(mc->GetFacelets());
         }
         else if (cmd == "set")
         {
-            if (mc == nullptr)
-            {
-                std::cout << "please initialize first!\n";
-                continue;
-            }
-
-            std::string s;
+            /*std::string s;
             std::cin >> s;
 
             if (!CCubeLogic::checkColors(s, mc->level_))
@@ -131,33 +92,21 @@ int main(int argc, char *argv[])
 
             mc->show();
 
-            std::cout << "done\n" << std::endl;
+            std::cout << "done\n" << std::endl;*/
         }
         else if (cmd == "rec")
         {
-            if (mc == nullptr)
-            {
-                std::cout << "please initialize first!\n";
-                continue;
-            }
-
-            time_t start = time(0);
+            /*time_t start = time(0);
 
             std::cout << CCubeLogic::FindShortestPath(mc->GetColors(), CConfig::SourceColorsMap[mc->level_], mc->level_)
                       << std::endl;
 
             time_t end = time(0);
 
-            std::cout << "Time used (in seconds) :" << end - start << std::endl;
+            std::cout << "Time used (in seconds) :" << end - start << std::endl;*/
         }
         else if (cmd == "random")
         {
-            if (mc == nullptr)
-            {
-                std::cout << "please initialize first!\n";
-                continue;
-            }
-
             int n;
             std::cin >> n;
 

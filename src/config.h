@@ -4,29 +4,15 @@
 #include <map>
 #include <string>
 
-struct SAction
-{
-    std::string cmd;
-    int axis;
-    int start;
-    int end;
-    int angle;
-};
-
 class CConfig
 {
   public:
-    static std::map<int, char> Dir2ColorMap;
-    static std::map<int, std::map<std::string, SAction>> InputsMap;
-    static std::map<int, std::map<std::pair<int, int>, std::vector<int>>> RotateMap;
-    static std::map<int, std::string> SourceColorsMap;
+    static std::vector<std::vector<int>> PrintFacelets;
+    static std::vector<char> Facelet2Color;
+    static int size;
 
   public:
-    static void Load(std::filesystem::path p);
+    static bool Load(std::filesystem::path p);
 
-    static void InitRotateMap(int max_level);
-
-    static void InitSourceColorsMap(int max_level);
-
-    static std::string GetRegex(int level);
+    //static std::string GetRegex(int level);
 };
