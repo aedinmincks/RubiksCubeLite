@@ -34,7 +34,7 @@ class CCubeLogic
   public:
     static void PrintFacelets(std::vector<int> &facelets);
 
-    static bool checkColors(const std::string &str, int level);
-
+    static void DoReplace(std::vector<int> &arr, std::vector<int> &replace);
+     
     static std::string FindShortestPath(const std::string &src, const std::string &dst, int level);
 };

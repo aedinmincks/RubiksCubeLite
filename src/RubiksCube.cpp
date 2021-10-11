@@ -32,8 +32,18 @@ bool CRubiksCube::SetFacelets(std::vector<int> &facelets)
     return true;
 }
 
-bool CRubiksCube::Rotate(std::string &cmd)
+bool CRubiksCube::Rotate(std::string &key)
 {
+    auto it = CConfig::Key2Transfer.find(key);
+    if (it == CConfig::Key2Transfer.end())
+    {
+        return false;
+    }
+
+    for (auto& v : it->second.replace)
+    {
+        CCubeLogic::DoReplace(facelets_, v); 
+    }
 
     return true;
 }
@@ -97,28 +107,22 @@ void CCubeLogic::PrintFacelets(std::vector<int> &facelets)
     std::cout << "]" << std::endl << std::endl;
 }
 
-bool CCubeLogic::checkColors(const std::string &str, int level)
+void CCubeLogic::DoReplace(std::vector<int> &arr, std::vector<int> &replace)
 {
-   /* if (str.size() != level * level * 6)
+    int n = replace.size();
+    if (n <= 1)
     {
-        return false;
+        return;
     }
 
-    std::map<char, int> m;
-    for (auto &c : str)
+    int temp = arr[replace[n - 1]];
+
+    for (int i = n - 1; i > 0; i--)
     {
-        m[c]++;
+        arr[replace[i]] = arr[replace[i - 1]];
     }
 
-    for (auto i = 0; i < 6; i++)
-    {
-        if (m[CConfig::Dir2ColorMap[i]] != level * level)
-        {
-            return false;
-        }
-    }*/
-
-    return true;
+    arr[replace[0]] = temp;
 }
 
 std::string CCubeLogic::FindShortestPath(const std::string &src, const std::string &dst, int level)

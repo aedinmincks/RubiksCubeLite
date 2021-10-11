@@ -7,9 +7,10 @@
 
 #include "yaml-cpp/yaml.h"
 
+int CConfig::size;
 std::vector<char> CConfig::Facelet2Color;
 std::vector<std::vector<int>> CConfig::PrintFacelets;
-int CConfig::size;
+std::unordered_map<std::string, STransfer> CConfig::Key2Transfer;
 
 bool CConfig::Load(std::filesystem::path p)
 {
@@ -87,32 +88,75 @@ bool CConfig::Load(std::filesystem::path p)
 
         PrintFacelets.emplace_back(v);
     }
+    
+    if (!config["transfer"])
+    {
+        return false;
+    }
+    YAML::Node transfers = config["transfer"];
+
+    for (auto transfer : transfers)
+    {
+        STransfer st;
+
+        if (!transfer["key"])
+        {
+            return false;
+        }
+        st.key = transfer["key"].as<std::string>();
+        
+        if (!transfer["replace"])
+        {
+            return false;
+        }
+        YAML::Node replace = transfer["replace"];
+
+        for (auto i : replace)
+        {
+            std::vector<int> v;
+
+            for (auto j : i)
+            {
+                v.emplace_back(j.as<int>());
+            }
+            
+            st.replace.emplace_back(v);
+        }
+
+        if (!transfer["inverse"])
+        {
+            return false;
+        }
+        st.inverse = transfer["inverse"].as<std::string>();
+
+        Key2Transfer.emplace(st.key, st);
+    }
 
     return true;
 }
 
-//std::string CConfig::GetRegex(int level)
-//{
-//    std::vector<std::string> v;
-//
-//    for (auto &s : InputsMap[level])
-//    {
-//        v.emplace_back(s.first);
-//    }
-//
-//    sort(v.begin(), v.end(), [](std::string &a, std::string &b) { return a.size() > b.size(); });
-//
-//    std::string regex;
-//
-//    for (int i = 0; i < v.size(); i++)
-//    {
-//        if (i != 0)
-//        {
-//            regex += '|';
-//        }
-//
-//        regex += v[i];
-//    }
-//
-//    return regex;
-//}
+std::string CConfig::GetRegex()
+{
+    std::vector<std::string> v;
+
+    for (auto &s : Key2Transfer)
+    {
+        v.emplace_back(s.first);
+    }
+
+    sort(v.begin(), v.end(), [](std::string &a, std::string &b) { return a.size() > b.size(); });
+
+    std::string regex;
+
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (i != 0)
+        {
+            regex += '|';
+        }
+
+        regex += v[i];
+    }
+
+    return regex;
+}

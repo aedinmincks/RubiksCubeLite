@@ -48,24 +48,21 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "do")
         {
-            /*std::string s;
+            std::string s;
             std::cin >> s;
 
-            std::regex r(CConfig::GetRegex(mc->level_));
+            std::regex r(CConfig::GetRegex());
             std::smatch sm;
             while (std::regex_search(s, sm, r))
             {
-                std::cout << sm.str() << std::endl;
+                std::string key = sm.str();
 
-                auto &input = CConfig::InputsMap[mc->level_][sm.str()];
-
-                assert(input.axis >= (int)EAxis::x && input.axis <= (int)EAxis::z);
-                assert(input.angle >= (int)EAngle::_0 && input.angle <= (int)EAngle::_270);
-
-                mc->Rotate((EAxis)input.axis, input.start, input.end, (EAngle)input.angle);
+                std::cout << key << std::endl;
+                
+                mc.Rotate(key);
 
                 s = sm.suffix();
-            }*/
+            }
         }
         else if (cmd == "get")
         {
