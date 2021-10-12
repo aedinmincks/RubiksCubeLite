@@ -81,7 +81,6 @@ class MapFieldLite {
     }
   }
   void Swap(MapFieldLite* other) { map_.swap(other->map_); }
-  void InternalSwap(MapFieldLite* other) { map_.InternalSwap(other->map_); }
 
   // Used in the implementation of parsing. Caller should take the ownership iff
   // arena_ is NULL.
@@ -106,7 +105,7 @@ class MapFieldLite {
 
   template <typename UnknownType>
   const char* ParseWithEnumValidation(const char* ptr, ParseContext* ctx,
-                                      bool (*is_valid)(int), uint32_t field_num,
+                                      bool (*is_valid)(int), uint32 field_num,
                                       InternalMetadata* metadata) {
     typename Derived::template Parser<MapFieldLite, Map<Key, T>> parser(this);
     return parser.template ParseWithEnumValidation<UnknownType>(
@@ -129,7 +128,7 @@ struct EnumParseWrapper {
   }
   T* map_field;
   bool (*is_valid)(int);
-  uint32_t field_num;
+  uint32 field_num;
   InternalMetadata* metadata;
 };
 
@@ -138,7 +137,7 @@ struct EnumParseWrapper {
 // generated code
 template <typename UnknownType, typename T>
 EnumParseWrapper<UnknownType, T> InitEnumParseWrapper(
-    T* map_field, bool (*is_valid)(int), uint32_t field_num,
+    T* map_field, bool (*is_valid)(int), uint32 field_num,
     InternalMetadata* metadata) {
   return EnumParseWrapper<UnknownType, T>{map_field, is_valid, field_num,
                                           metadata};
