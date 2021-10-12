@@ -1,5 +1,4 @@
 #include "RubiksCube.h"
-#include "config.h"
 #include "message.pb.h"
 
 #include <algorithm>
@@ -70,6 +69,13 @@ void CRubiksCube::show()
 
 std::string CRubiksCube::Solve()
 {
+    std::string ans;
+
+    for (auto dg : CConfig::DownGroups)
+    {
+    }
+
+    return ans;
 }
 
 std::string CRubiksCube::RandomRotate(int n)
@@ -135,7 +141,7 @@ void CCubeLogic::DoReplace(std::vector<int> &arr, std::vector<int> &replace)
     arr[replace[0]] = temp;
 }
 
-std::string CCubeLogic::Serialize(std::vector<int> &arr)
+std::string CCubeLogic::Serialize(const std::vector<int> &arr)
 {
     Protobuf::Array msg;
 
@@ -147,7 +153,7 @@ std::string CCubeLogic::Serialize(std::vector<int> &arr)
     return msg.SerializeAsString();
 }
 
-std::vector<int> CCubeLogic::Deserialize(std::string &str)
+std::vector<int> CCubeLogic::Deserialize(const std::string &str)
 {
     Protobuf::Array msg;
 
@@ -163,14 +169,39 @@ std::vector<int> CCubeLogic::Deserialize(std::string &str)
     return arr;
 }
 
-std::string CCubeLogic::FindShortestPath(const std::string &src, const std::string &dst, int level)
+bool CCubeLogic::IsGroupTarget(const std::vector<int> &arr, const SDownGroup &dg)
 {
-    /*std::map<std::string, std::string> path;
+    for (auto &v : dg.target)
+    {
+        std::set<int> st(v.begin(), v.end());
 
+        for (auto &i : v)
+        {
+            if (st.find(arr[i]) == st.end())
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+std::string CCubeLogic::FindShortestPath(const std::vector<int> &src, std::vector<int> &dst, const SDownGroup &dg)
+{
+    std::map<std::string, std::string> path;
     std::queue<std::string> q;
 
-    path[src] = {};
-    q.push(src);
+    if (IsGroupTarget(src, dg))
+    {
+        dst = src;
+        return "";
+    }
+
+    auto str_src = CCubeLogic::Serialize(src);
+
+    path[str_src] = {};
+    q.push(str_src);
 
     int t = 0;
 
@@ -184,14 +215,11 @@ std::string CCubeLogic::FindShortestPath(const std::string &src, const std::stri
             auto s = q.front();
             q.pop();
 
-            for (auto &[k, v] : CConfig::InputsMap[level])
+            for (auto &key : dg.group)
             {
-                assert(v.axis >= (int)EAxis::x && v.axis <= (int)EAxis::z);
-                assert(v.angle >= (int)EAngle::_0 && v.angle <= (int)EAngle::_270);
+                auto vec = Deserialize(key);
 
-                std::string s1 = CCubeLogic::RotateColors(s, level, (EAxis)v.axis, v.start, v.end, (EAngle)v.angle);
-
-                if (s1 == dst)
+                /*if (s1 == dst)
                 {
                     return path[s] + k;
                 }
@@ -200,10 +228,10 @@ std::string CCubeLogic::FindShortestPath(const std::string &src, const std::stri
                 {
                     path[s1] = path[s] + k;
                     q.push(s1);
-                }
+                }*/
             }
         }
-    }*/
+    }
 
     return "impossible";
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "config.h"
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -38,9 +40,11 @@ class CCubeLogic
 
     static void DoReplace(std::vector<int> &arr, std::vector<int> &replace);
 
-    static std::string Serialize(std::vector<int> &arr);
+    static std::string Serialize(const std::vector<int> &arr);
 
-    static std::vector<int> Deserialize(std::string &str);
+    static std::vector<int> Deserialize(const std::string &str);
 
-    static std::string FindShortestPath(const std::string &src, const std::string &dst, int level);
+    static bool IsGroupTarget(const std::vector<int> &arr, const SDownGroup &dg);
+
+    static std::string FindShortestPath(const std::vector<int> &src, std::vector<int> &dst, const SDownGroup &dg);
 };
