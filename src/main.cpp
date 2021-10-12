@@ -5,8 +5,9 @@
 #include "config.h"
 
 #include <cassert>
-#include <ctime>
 #include <regex>
+#include <chrono>
+
 
 #define MAXLEVEL (3)
 
@@ -97,15 +98,17 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "solve")
         {
-            time_t start = time(0);
+            auto start = std::chrono::system_clock::now();
 
             auto str = mc.Solve();
 
             std::cout << str << std::endl;
 
-            time_t end = time(0);
+            auto end = std::chrono::system_clock::now();
 
-            std::cout << "Time used (in seconds) :" << end - start << std::endl;
+            std::chrono::duration<double> diff = end - start;
+
+            std::cout << "Time used (in seconds) :" << diff.count() << std::endl;
         }
         else if (cmd == "random")
         {

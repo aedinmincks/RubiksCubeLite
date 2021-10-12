@@ -71,8 +71,22 @@ std::string CRubiksCube::Solve()
 {
     std::string ans;
 
+    std::vector<int> arr(facelets_);
+
     for (auto dg : CConfig::DownGroups)
     {
+        auto s = CCubeLogic::FindShortestPath(arr, arr, dg);
+        
+        printf("%s\r\n", s.c_str());
+
+        CCubeLogic::PrintFacelets(arr);
+
+        if (s == "impossible")
+        {
+            return "impossible";
+        }
+
+        ans += s;
     }
 
     return ans;
@@ -141,6 +155,24 @@ void CCubeLogic::DoReplace(std::vector<int> &arr, std::vector<int> &replace)
     arr[replace[0]] = temp;
 }
 
+std::vector<int> CCubeLogic::DoReplacesByKey(const std::vector<int> &arr, std::string key)
+{
+    std::vector<int> ans(arr);
+
+    auto it = CConfig::Key2Transfer.find(key);
+    if (it == CConfig::Key2Transfer.end())
+    {
+        return ans;
+    }
+
+    for (auto &v : it->second.replace)
+    {
+        CCubeLogic::DoReplace(ans, v);
+    }
+
+    return ans;
+}
+
 std::string CCubeLogic::Serialize(const std::vector<int> &arr)
 {
     Protobuf::Array msg;
@@ -189,7 +221,7 @@ bool CCubeLogic::IsGroupTarget(const std::vector<int> &arr, const SDownGroup &dg
 
 std::string CCubeLogic::FindShortestPath(const std::vector<int> &src, std::vector<int> &dst, const SDownGroup &dg)
 {
-    std::map<std::string, std::string> path;
+    std::unordered_map<std::string, std::string> path;
     std::queue<std::string> q;
 
     if (IsGroupTarget(src, dg))
@@ -215,20 +247,25 @@ std::string CCubeLogic::FindShortestPath(const std::vector<int> &src, std::vecto
             auto s = q.front();
             q.pop();
 
+            auto vec = Deserialize(s);
+
             for (auto &key : dg.group)
             {
-                auto vec = Deserialize(key);
+                auto arr = CCubeLogic::DoReplacesByKey(vec, key);
 
-                /*if (s1 == dst)
+                if (IsGroupTarget(arr, dg))
                 {
-                    return path[s] + k;
+                    dst = arr;
+                    return path[s] + key;
                 }
+
+                auto s1 = CCubeLogic::Serialize(arr);
 
                 if (path.find(s1) == path.end())
                 {
-                    path[s1] = path[s] + k;
+                    path[s1] = path[s] + key;
                     q.push(s1);
-                }*/
+                }
             }
         }
     }

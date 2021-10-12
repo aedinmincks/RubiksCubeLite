@@ -40,6 +40,8 @@ class CCubeLogic
 
     static void DoReplace(std::vector<int> &arr, std::vector<int> &replace);
 
+    static std::vector<int> DoReplacesByKey(const std::vector<int> &arr, std::string key);
+
     static std::string Serialize(const std::vector<int> &arr);
 
     static std::vector<int> Deserialize(const std::string &str);
