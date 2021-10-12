@@ -68,26 +68,35 @@ void CRubiksCube::show()
     }
 }
 
+std::string CRubiksCube::Solve()
+{
+}
+
 std::string CRubiksCube::RandomRotate(int n)
 {
     std::string ans;
+    std::vector<std::string> vec;
 
-    // int m = CConfig::InputsMap[level_].size();
+    for (auto &[k, v] : CConfig::Key2Transfer)
+    {
+        vec.push_back(k);
+    }
 
-    // std::random_device rd;
-    // std::mt19937 mt(rd());
+    int m = vec.size();
 
-    // for (int i = 0; i < n; i++)
-    //{
-    //    int r = mt() % m;
+    std::random_device rd;
+    std::mt19937 mt(rd());
 
-    //    auto it = CConfig::InputsMap[level_].begin();
-    //    std::advance(it, r);
+    for (int i = 0; i < n; i++)
+    {
+        int r = mt() % m;
 
-    //    ans += it->first;
+        auto s = vec[r];
 
-    //    Rotate((EAxis)it->second.axis, it->second.start, it->second.end, (EAngle)it->second.angle);
-    //}
+        ans += s;
+
+        Rotate(s);
+    }
 
     return ans;
 }

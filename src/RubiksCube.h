@@ -26,6 +26,8 @@ class CRubiksCube
 
     void show();
 
+    std::string Solve();
+
     std::string RandomRotate(int n);
 };
 

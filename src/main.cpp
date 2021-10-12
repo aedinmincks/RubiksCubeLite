@@ -95,16 +95,17 @@ int main(int argc, char *argv[])
                 std::cout << "error!" << std::endl;
             }
         }
-        else if (cmd == "rec")
+        else if (cmd == "solve")
         {
-            /*time_t start = time(0);
+            time_t start = time(0);
 
-            std::cout << CCubeLogic::FindShortestPath(mc->GetColors(), CConfig::SourceColorsMap[mc->level_], mc->level_)
-                      << std::endl;
+            auto str = mc.Solve();
+
+            std::cout << str << std::endl;
 
             time_t end = time(0);
 
-            std::cout << "Time used (in seconds) :" << end - start << std::endl;*/
+            std::cout << "Time used (in seconds) :" << end - start << std::endl;
         }
         else if (cmd == "random")
         {
