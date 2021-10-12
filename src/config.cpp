@@ -11,6 +11,7 @@ int CConfig::size;
 std::vector<char> CConfig::Facelet2Color;
 std::vector<std::vector<int>> CConfig::PrintFacelets;
 std::unordered_map<std::string, STransfer> CConfig::Key2Transfer;
+std::vector<SDownGroup> CConfig::DownGroups;
 
 bool CConfig::Load(std::filesystem::path p)
 {
@@ -54,6 +55,7 @@ bool CConfig::Load(std::filesystem::path p)
 
             if (index < 0 || index >= size)
             {
+                printf("the index<%d> does not exist in colors val<%c>\r\n", index, val);
                 return false;
             }
             
@@ -117,7 +119,15 @@ bool CConfig::Load(std::filesystem::path p)
 
             for (auto j : i)
             {
-                v.emplace_back(j.as<int>());
+                int index = j.as<int>();
+
+                if (index < 0 || index >= size)
+                {
+                    printf("the index<%d> does not exist in transfer key<%s>\r\n", index, st.key.c_str());
+                    return false;
+                }
+
+                v.emplace_back(index);
             }
             
             st.replace.emplace_back(v);
@@ -130,6 +140,68 @@ bool CConfig::Load(std::filesystem::path p)
         st.inverse = transfer["inverse"].as<std::string>();
 
         Key2Transfer.emplace(st.key, st);
+    }
+
+    if (!config["downgroup"])
+    {
+        return false;
+    }
+    YAML::Node downgroups = config["downgroup"];
+
+    for (auto downgroup : downgroups)
+    {
+        SDownGroup dg;
+
+        if (!downgroup["id"])
+		{
+			return false;
+		}
+        dg.id = downgroup["id"].as<int>();
+        
+        if (!downgroup["group"])
+        {
+            return false;
+        }
+        
+        for (auto str : downgroup["group"])
+        {
+            std::string key = str.as<std::string>();
+            
+            if (Key2Transfer.find(key) == Key2Transfer.end())
+            {
+                printf("the key<%s> does not exist in downgroup id<%d>\r\n", key.c_str(), dg.id);
+                return false;
+            }
+
+            dg.group.emplace_back(key);
+        }
+        
+        if (!downgroup["target"])
+        {
+            return false;
+        }
+
+        for (auto i : downgroup["target"])
+        {
+            std::vector<int> v;
+
+            for (auto j : i)
+            {
+                int index = j.as<int>();
+
+                if (index < 0 || index >= size)
+                {
+                    printf("the index<%d> does not exist in downgroup id<%d>\r\n", index, dg.id);
+                    return false;
+                }
+
+                v.emplace_back(index);
+            }
+
+            dg.target.emplace_back(v);
+        }
+
+        DownGroups.emplace_back(dg);
     }
 
     return true;

@@ -54,7 +54,7 @@ void CRubiksCube::show()
     {
         for (auto &i : PrintFacelet)
         {
-            if (i < 0)
+            if (i < 0 || i >= size_)
             {
                 std::cout << ' ';
             }

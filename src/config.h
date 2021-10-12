@@ -12,6 +12,13 @@ struct STransfer
     std::string inverse;
 };
 
+struct SDownGroup
+{
+    int id;
+    std::vector<std::string> group;
+    std::vector<std::vector<int>> target;
+};
+
 class CConfig
 {
   public:
@@ -19,6 +26,7 @@ class CConfig
     static std::vector<std::vector<int>> PrintFacelets;
     static std::vector<char> Facelet2Color;
     static std::unordered_map<std::string, STransfer> Key2Transfer;
+    static std::vector<SDownGroup> DownGroups;
 
   public:
     static bool Load(std::filesystem::path p);
