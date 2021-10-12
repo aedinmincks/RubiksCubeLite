@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="protobuf">
+      <UniqueIdentifier>{3a5e080e-e07c-4212-b46e-9d704652d02d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config.cpp">
@@ -24,6 +27,9 @@
     <ClCompile Include="src\RubiksCube.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="protobuf\message.pb.cc">
+      <Filter>protobuf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\config.h">
@@ -31,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="src\RubiksCube.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="protobuf\message.pb.h">
+      <Filter>protobuf</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

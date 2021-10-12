@@ -1,5 +1,6 @@
 #include "RubiksCube.h"
 #include "config.h"
+#include "message.pb.h"
 
 #include <algorithm>
 #include <cassert>
@@ -40,9 +41,9 @@ bool CRubiksCube::Rotate(std::string &key)
         return false;
     }
 
-    for (auto& v : it->second.replace)
+    for (auto &v : it->second.replace)
     {
-        CCubeLogic::DoReplace(facelets_, v); 
+        CCubeLogic::DoReplace(facelets_, v);
     }
 
     return true;
@@ -71,12 +72,12 @@ std::string CRubiksCube::RandomRotate(int n)
 {
     std::string ans;
 
-    //int m = CConfig::InputsMap[level_].size();
+    // int m = CConfig::InputsMap[level_].size();
 
-    //std::random_device rd;
-    //std::mt19937 mt(rd());
+    // std::random_device rd;
+    // std::mt19937 mt(rd());
 
-    //for (int i = 0; i < n; i++)
+    // for (int i = 0; i < n; i++)
     //{
     //    int r = mt() % m;
 
@@ -123,6 +124,34 @@ void CCubeLogic::DoReplace(std::vector<int> &arr, std::vector<int> &replace)
     }
 
     arr[replace[0]] = temp;
+}
+
+std::string CCubeLogic::Serialize(std::vector<int> &arr)
+{
+    Protobuf::Array msg;
+
+    for (auto &i : arr)
+    {
+        msg.add_array(i);
+    }
+
+    return msg.SerializeAsString();
+}
+
+std::vector<int> CCubeLogic::Deserialize(std::string &str)
+{
+    Protobuf::Array msg;
+
+    std::vector<int> arr;
+
+    msg.ParseFromString(str);
+
+    for (auto i : msg.array())
+    {
+        arr.push_back(i);
+    }
+
+    return arr;
 }
 
 std::string CCubeLogic::FindShortestPath(const std::string &src, const std::string &dst, int level)

@@ -22,7 +22,7 @@ class CRubiksCube
         return facelets_;
     };
 
-    bool Rotate(std::string& cmd);
+    bool Rotate(std::string &cmd);
 
     void show();
 
@@ -35,6 +35,10 @@ class CCubeLogic
     static void PrintFacelets(std::vector<int> &facelets);
 
     static void DoReplace(std::vector<int> &arr, std::vector<int> &replace);
-     
+
+    static std::string Serialize(std::vector<int> &arr);
+
+    static std::vector<int> Deserialize(std::string &str);
+
     static std::string FindShortestPath(const std::string &src, const std::string &dst, int level);
 };

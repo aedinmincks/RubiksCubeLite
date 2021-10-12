@@ -58,7 +58,7 @@ bool CConfig::Load(std::filesystem::path p)
                 printf("the index<%d> does not exist in colors val<%c>\r\n", index, val);
                 return false;
             }
-            
+
             Facelet2Color[index] = val;
         }
     }
@@ -90,7 +90,7 @@ bool CConfig::Load(std::filesystem::path p)
 
         PrintFacelets.emplace_back(v);
     }
-    
+
     if (!config["transfer"])
     {
         return false;
@@ -106,7 +106,7 @@ bool CConfig::Load(std::filesystem::path p)
             return false;
         }
         st.key = transfer["key"].as<std::string>();
-        
+
         if (!transfer["replace"])
         {
             return false;
@@ -129,7 +129,7 @@ bool CConfig::Load(std::filesystem::path p)
 
                 v.emplace_back(index);
             }
-            
+
             st.replace.emplace_back(v);
         }
 
@@ -153,20 +153,20 @@ bool CConfig::Load(std::filesystem::path p)
         SDownGroup dg;
 
         if (!downgroup["id"])
-		{
-			return false;
-		}
+        {
+            return false;
+        }
         dg.id = downgroup["id"].as<int>();
-        
+
         if (!downgroup["group"])
         {
             return false;
         }
-        
+
         for (auto str : downgroup["group"])
         {
             std::string key = str.as<std::string>();
-            
+
             if (Key2Transfer.find(key) == Key2Transfer.end())
             {
                 printf("the key<%s> does not exist in downgroup id<%d>\r\n", key.c_str(), dg.id);
@@ -175,7 +175,7 @@ bool CConfig::Load(std::filesystem::path p)
 
             dg.group.emplace_back(key);
         }
-        
+
         if (!downgroup["target"])
         {
             return false;

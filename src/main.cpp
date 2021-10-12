@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
                 std::string key = sm.str();
 
                 std::cout << key << std::endl;
-                
+
                 mc.Rotate(key);
 
                 s = sm.suffix();
@@ -79,13 +79,13 @@ int main(int argc, char *argv[])
             std::smatch sm;
             while (std::regex_search(s, sm, r))
             {
-                //std::cout << sm.str() << std::endl;
+                // std::cout << sm.str() << std::endl;
 
                 v.emplace_back(std::stoi(sm.str()));
 
                 s = sm.suffix();
             }
-            
+
             if (mc.SetFacelets(v))
             {
                 std::cout << "done!" << std::endl;
