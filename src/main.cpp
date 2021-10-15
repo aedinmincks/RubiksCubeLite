@@ -1,9 +1,8 @@
 ﻿// main.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include "RubiksCube.h"
-#include "config.h"
-
+#include <iostream>
+#include <filesystem>
 #include <cassert>
 #include <regex>
 #include <chrono>
@@ -18,14 +17,6 @@ int main(int argc, char *argv[])
         printf("argc<%d> is less than 2", argc);
         return 1;
     }
-
-    if (!CConfig::Load(std::filesystem::path(argv[1])))
-    {
-        printf("yaml load error");
-        return 1;
-    }
-
-    CRubiksCube mc(CConfig::size);
 
     while (1)
     {
@@ -45,11 +36,11 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "show")
         {
-            mc.show();
+            
         }
         else if (cmd == "do")
         {
-            std::string s;
+            /*std::string s;
             std::cin >> s;
 
             std::regex r(CConfig::GetRegex());
@@ -63,42 +54,42 @@ int main(int argc, char *argv[])
                 mc.Rotate(key);
 
                 s = sm.suffix();
-            }
+            }*/
         }
         else if (cmd == "get")
         {
-            CCubeLogic::PrintFacelets(mc.GetFacelets());
+            
         }
         else if (cmd == "set")
         {
-            std::string s;
-            std::cin >> s;
+            //std::string s;
+            //std::cin >> s;
 
-            std::vector<int> v;
+            //std::vector<int> v;
 
-            std::regex r("([0-9]+)");
-            std::smatch sm;
-            while (std::regex_search(s, sm, r))
-            {
-                // std::cout << sm.str() << std::endl;
+            //std::regex r("([0-9]+)");
+            //std::smatch sm;
+            //while (std::regex_search(s, sm, r))
+            //{
+            //    // std::cout << sm.str() << std::endl;
 
-                v.emplace_back(std::stoi(sm.str()));
+            //    v.emplace_back(std::stoi(sm.str()));
 
-                s = sm.suffix();
-            }
+            //    s = sm.suffix();
+            //}
 
-            if (mc.SetFacelets(v))
-            {
-                std::cout << "done!" << std::endl;
-            }
-            else
-            {
-                std::cout << "error!" << std::endl;
-            }
+            //if (mc.SetFacelets(v))
+            //{
+            //    std::cout << "done!" << std::endl;
+            //}
+            //else
+            //{
+            //    std::cout << "error!" << std::endl;
+            //}
         }
         else if (cmd == "solve")
         {
-            auto start = std::chrono::system_clock::now();
+            /*auto start = std::chrono::system_clock::now();
 
             auto str = mc.Solve();
 
@@ -108,18 +99,18 @@ int main(int argc, char *argv[])
 
             std::chrono::duration<double> diff = end - start;
 
-            std::cout << "Time used (in seconds) :" << diff.count() << std::endl;
+            std::cout << "Time used (in seconds) :" << diff.count() << std::endl;*/
         }
         else if (cmd == "random")
         {
-            int n;
+            /*int n;
             std::cin >> n;
 
             std::string s = mc.RandomRotate(n);
 
             std::cout << s << std::endl;
 
-            mc.show();
+            mc.show();*/
         }
     }
 

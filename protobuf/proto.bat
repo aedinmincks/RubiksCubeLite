@@ -1,1 +1,0 @@
-.\..\lib\installed\x86-windows\tools\protobuf\protoc.exe --cpp_out=.\ .\message.proto

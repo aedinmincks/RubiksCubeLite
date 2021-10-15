@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package Protobuf;
-
-message Array {
-  repeated int32 array = 1;
-}
