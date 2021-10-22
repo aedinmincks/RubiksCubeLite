@@ -20,6 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\RubiksCubeBase.cpp" />
+    <ClCompile Include="src\VCube2.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\RubiksCubeBase.h" />
+    <ClInclude Include="src\VCube2.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -6,18 +6,12 @@
 #include <cassert>
 #include <regex>
 #include <chrono>
-
+#include <memory>
 
 #define MAXLEVEL (3)
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
-        printf("argc<%d> is less than 2", argc);
-        return 1;
-    }
-
     while (1)
     {
         std::string cmd;
