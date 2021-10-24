@@ -13,12 +13,12 @@ class CRubiksCubeBase
 
     vi &GetState()
     {
-        return state;
+        return currentState;
     };
 
     const vi &GetGoalState()
     {
-        return goalstate;
+        return goalState;
     };
 
     int GetSize()
@@ -28,14 +28,16 @@ class CRubiksCubeBase
 
     void DoMove(int move);
 
-    virtual vi ApplyMove(int move, vi v);
+    virtual vi ApplyMove(int move, vi state);
 
     virtual void Show() = 0;
 
     virtual void Solve() = 0;
 
+    virtual void Reset() = 0;
+
   public:
-    vi state;
-    vi goalstate;
+    vi currentState;
+    vi goalState;
     int size;
 };

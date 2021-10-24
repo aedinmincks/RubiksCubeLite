@@ -1,12 +1,12 @@
 ﻿// main.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
-#include <iostream>
-#include <filesystem>
 #include <cassert>
-#include <regex>
 #include <chrono>
+#include <filesystem>
+#include <iostream>
 #include <memory>
+#include <regex>
 
 #define MAXLEVEL (3)
 
@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "show")
         {
-            
         }
         else if (cmd == "do")
         {
@@ -52,18 +51,17 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "get")
         {
-            
         }
         else if (cmd == "set")
         {
-            //std::string s;
-            //std::cin >> s;
+            // std::string s;
+            // std::cin >> s;
 
-            //std::vector<int> v;
+            // std::vector<int> v;
 
-            //std::regex r("([0-9]+)");
-            //std::smatch sm;
-            //while (std::regex_search(s, sm, r))
+            // std::regex r("([0-9]+)");
+            // std::smatch sm;
+            // while (std::regex_search(s, sm, r))
             //{
             //    // std::cout << sm.str() << std::endl;
 
@@ -72,11 +70,11 @@ int main(int argc, char *argv[])
             //    s = sm.suffix();
             //}
 
-            //if (mc.SetFacelets(v))
+            // if (mc.SetFacelets(v))
             //{
             //    std::cout << "done!" << std::endl;
             //}
-            //else
+            // else
             //{
             //    std::cout << "error!" << std::endl;
             //}

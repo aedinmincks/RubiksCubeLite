@@ -3,15 +3,15 @@
 CRubiksCubeBase::CRubiksCubeBase(int n)
 {
     size = n;
-    state.assign(n, 0);
-    goalstate.assign(n, 0);
+    currentState.assign(n, 0);
+    goalState.assign(n, 0);
 }
 
 bool CRubiksCubeBase::SetState(vi v)
 {
     if (v.size() == size)
     {
-        state = v;
+        currentState = v;
         return true;
     }
 
@@ -20,7 +20,7 @@ bool CRubiksCubeBase::SetState(vi v)
 
 void CRubiksCubeBase::DoMove(int move)
 {
-    state = ApplyMove(move, state);
+    currentState = ApplyMove(move, currentState);
 }
 
 vi CRubiksCubeBase::ApplyMove(int move, vi v)
