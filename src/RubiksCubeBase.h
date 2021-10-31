@@ -32,7 +32,7 @@ class CRubiksCubeBase
 
     virtual void Show() = 0;
 
-    virtual void Solve() = 0;
+    virtual std::string Solve() = 0;
 
     virtual void Reset() = 0;
 

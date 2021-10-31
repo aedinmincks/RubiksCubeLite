@@ -15,6 +15,10 @@ class VCube2 : public CRubiksCubeBase
 
     virtual vi ApplyMove(int move, vi state) override;
 
+    virtual std::string Solve() override;
+
   private:
     static std::vector<std::string> goal;
+
+    static vi id(vi state, int phase);
 };

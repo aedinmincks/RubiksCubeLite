@@ -116,3 +116,33 @@ vi VCube2::ApplyMove(int move, vi state)
 
     return state;
 }
+
+std::string VCube2::Solve()
+{
+    int phase = 0;
+
+    while (phase++ < 4)
+    {
+        
+    }
+
+    return std::string{};
+}
+
+vi VCube2::id(vi state, int phase)
+{
+    switch (phase)
+    {
+    case 0: //(U D L2 R2 F2 B2)
+        return vi(state.begin() + 8, state.begin() + 16);
+        break;
+    case 1:
+        
+        break;
+    case 2:
+    default:
+        break;
+    }
+
+    return state;
+}
