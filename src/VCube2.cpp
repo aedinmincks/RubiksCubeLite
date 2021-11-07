@@ -1,4 +1,6 @@
 #include "VCube2.h"
+#include <map>
+#include <queue>
 
 std::vector<std::string> VCube2::goal = {"UFR", "URB", "UBL", "ULF", "DRF", "DFL", "DLB", "DBR"};
 
@@ -75,7 +77,7 @@ void VCube2::Show()
 
 vi VCube2::ApplyMove(int move, vi state)
 {
-    std::vector<std::vector<int>> affectedCubiesLocation = {
+    const static std::vector<std::vector<int>> affectedCubiesLocation = {
         {0, 1, 2, 3}, // U
         {4, 5, 6, 7}, // D
         {0, 3, 5, 4}, // F
@@ -84,7 +86,7 @@ vi VCube2::ApplyMove(int move, vi state)
         {1, 0, 4, 7}, // R
     };
 
-    std::vector<std::vector<int>> affectedCubiesorientation = {
+    const static std::vector<std::vector<int>> affectedCubiesorientation = {
         {0, 0, 0, 0}, // U
         {0, 0, 0, 0}, // D
         {2, 1, 2, 1}, // F
@@ -119,14 +121,99 @@ vi VCube2::ApplyMove(int move, vi state)
 
 std::string VCube2::Solve()
 {
-    int phase = 0;
+    const static std::vector<std::vector<int>> applicableMoves = {
+        {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
+        {0, 1, 2, 3, 4, 5, 7, 10, 13, 16},
+        {1, 4, 7, 10, 13, 16},
+    };
 
-    while (phase++ < 4)
+    const static std::vector<std::string> MovesString = {
+        "U", "U2", "U'",
+        "D", "D2", "D'",
+        "F", "F2", "F'",
+        "B", "B2", "B'",
+        "L", "L2", "L'",
+        "R", "R2", "R'",
+    };
+
+    std::string ans;
+
+    int phase = 0;
+    vi state = currentState;
+
+    while (phase < 3)
     {
-        
+        vi currentId = id(state, phase), goalId = id(goalState, phase);
+        if (currentId == goalId)
+        {
+            continue;
+        }
+
+        std::queue<vi> q;
+        q.push(state);
+        q.push(goalState);
+
+        std::map<vi, vi> predecessor;
+        std::map<vi, int> direction, lastMove;
+        direction[ currentId ] = 1;
+        direction[ goalId ] = 2;
+
+        while (1)
+        {
+            vi oldState = q.front();
+            q.pop();
+            vi oldId = id(oldState, phase);
+            int &oldDir = direction[oldId];
+
+            for (int move : applicableMoves[phase])
+            {
+                vi newState = ApplyMove(move, oldState);
+                vi newId = id(newState, phase);
+                int &newDir = direction[newId];
+
+                if (newDir && newDir != oldDir)
+                {
+                    if (oldDir > 1)
+                    {
+                        swap(newId, oldId);
+                        move = inverse(move);
+                    }
+
+                    vi algorithm(1, move);
+                    while (oldId != currentId)
+                    {
+                        algorithm.insert(algorithm.begin(), lastMove[oldId]);
+                        oldId = predecessor[oldId];
+                    }
+                    while (newId != goalId)
+                    {
+                        algorithm.push_back(inverse(lastMove[newId]));
+                        newId = predecessor[newId];
+                    }
+
+                    for (int i = 0; i < (int)algorithm.size(); i++)
+                    {
+                        ans += MovesString[algorithm[i]];
+                        state = ApplyMove(algorithm[i], state);
+                    }
+                }
+                else
+                {
+                    if (!newDir)
+                    {
+                        q.push(newState);
+                        newDir = oldDir;
+                        lastMove[newId] = move;
+                        predecessor[newId] = oldId;
+                    }
+                }
+            }
+        }
+
+        phase++;
     }
 
-    return std::string{};
+    return ans;
 }
 
 vi VCube2::id(vi state, int phase)
@@ -134,15 +221,34 @@ vi VCube2::id(vi state, int phase)
     switch (phase)
     {
     case 0: //(U D L2 R2 F2 B2)
+    {
         return vi(state.begin() + 8, state.begin() + 16);
-        break;
-    case 1:
-        
-        break;
+    }
+    case 1: //(U2 D2 L2 R2 F2 B2)
+    {
+        vi result(9);
+        for (int c = 0; c < 8; c++)
+        {
+            result[c] = state[c] & 5;
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = i + 1; j < 8; j++)
+            {
+                result[8] ^= state[i] > state[j];
+            }
+        }
+        return result;
+    }
     case 2:
     default:
         break;
     }
 
     return state;
+}
+
+int VCube2::inverse(int move)
+{
+    return move + 2 - 2 * (move % 3);
 }

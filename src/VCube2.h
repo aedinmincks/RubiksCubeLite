@@ -21,4 +21,6 @@ class VCube2 : public CRubiksCubeBase
     static std::vector<std::string> goal;
 
     static vi id(vi state, int phase);
+
+    static int inverse(int move);
 };
