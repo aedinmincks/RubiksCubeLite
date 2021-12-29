@@ -7,11 +7,29 @@
 #include <iostream>
 #include <memory>
 #include <regex>
-
-#define MAXLEVEL (3)
+#include "VCube2.h"
 
 int main(int argc, char *argv[])
 {
+    if (argc != 2)
+    {
+        std::cout << "argc is not 2" << std::endl;
+        return 1;
+    }
+
+    std::unique_ptr<CRubiksCubeBase> cube;
+
+    std::string CubeString(argv[1]);
+    if (CubeString == "2")
+    {
+        cube = std::make_unique<VCube2>();
+    }
+    else
+    {
+        std::cout << "argv[1] is not exist" << std::endl;
+        return 2;
+    }
+
     while (1)
     {
         std::string cmd;
@@ -30,13 +48,14 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "show")
         {
+            cube->Show();
         }
         else if (cmd == "do")
         {
-            /*std::string s;
+            std::string s;
             std::cin >> s;
 
-            std::regex r(CConfig::GetRegex());
+            std::regex r(cube->GetRegex());
             std::smatch sm;
             while (std::regex_search(s, sm, r))
             {
@@ -44,10 +63,12 @@ int main(int argc, char *argv[])
 
                 std::cout << key << std::endl;
 
-                mc.Rotate(key);
+                auto state = cube->ApplyMove(cube->GetMove(key), cube->GetState());
+
+                cube->SetState(state);
 
                 s = sm.suffix();
-            }*/
+            }
         }
         else if (cmd == "get")
         {
@@ -81,9 +102,9 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "solve")
         {
-            /*auto start = std::chrono::system_clock::now();
+            auto start = std::chrono::system_clock::now();
 
-            auto str = mc.Solve();
+            auto str = cube->Solve();
 
             std::cout << str << std::endl;
 
@@ -91,7 +112,7 @@ int main(int argc, char *argv[])
 
             std::chrono::duration<double> diff = end - start;
 
-            std::cout << "Time used (in seconds) :" << diff.count() << std::endl;*/
+            std::cout << "Time used (in seconds) :" << diff.count() << std::endl;
         }
         else if (cmd == "random")
         {

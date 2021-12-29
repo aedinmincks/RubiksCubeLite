@@ -17,6 +17,10 @@ class VCube2 : public CRubiksCubeBase
 
     virtual std::string Solve() override;
 
+    virtual std::string GetRegex() override;
+
+    virtual int GetMove(std::string s) override;
+
   private:
     static std::vector<std::string> goal;
 

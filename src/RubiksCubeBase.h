@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 using vi = std::vector<int>;
 
@@ -36,6 +36,10 @@ class CRubiksCubeBase
     virtual std::string Solve() = 0;
 
     virtual void Reset() = 0;
+
+    virtual std::string GetRegex() = 0;
+
+    virtual int GetMove(std::string s) = 0;
 
   public:
     vi currentState;

@@ -119,23 +119,18 @@ vi VCube2::ApplyMove(int move, vi state)
     return state;
 }
 
+const static std::vector<std::string> MovesString = {
+    "U", "U2", "U'", "D", "D2", "D'", "F", "F2", "F'", "B", "B2", "B'", "L", "L2", "L'", "R", "R2", "R'",
+};
+
+const static std::vector<std::vector<int>> applicableMoves = {
+    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
+    {0, 1, 2, 3, 4, 5, 7, 10, 13, 16},
+    {1, 4, 7, 10, 13, 16},
+};
+
 std::string VCube2::Solve()
 {
-    const static std::vector<std::vector<int>> applicableMoves = {
-        {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
-        {0, 1, 2, 3, 4, 5, 7, 10, 13, 16},
-        {1, 4, 7, 10, 13, 16},
-    };
-
-    const static std::vector<std::string> MovesString = {
-        "U", "U2", "U'",
-        "D", "D2", "D'",
-        "F", "F2", "F'",
-        "B", "B2", "B'",
-        "L", "L2", "L'",
-        "R", "R2", "R'",
-    };
-
     std::string ans;
 
     int phase = 0;
@@ -155,8 +150,8 @@ std::string VCube2::Solve()
 
         std::map<vi, vi> predecessor;
         std::map<vi, int> direction, lastMove;
-        direction[ currentId ] = 1;
-        direction[ goalId ] = 2;
+        direction[currentId] = 1;
+        direction[goalId] = 2;
 
         while (1)
         {
@@ -196,24 +191,59 @@ std::string VCube2::Solve()
                         ans += MovesString[algorithm[i]];
                         state = ApplyMove(algorithm[i], state);
                     }
+
+                    goto nextPhasePlease;
                 }
-                else
+
+                if (!newDir)
                 {
-                    if (!newDir)
-                    {
-                        q.push(newState);
-                        newDir = oldDir;
-                        lastMove[newId] = move;
-                        predecessor[newId] = oldId;
-                    }
+                    q.push(newState);
+                    newDir = oldDir;
+                    lastMove[newId] = move;
+                    predecessor[newId] = oldId;
                 }
             }
         }
 
+    nextPhasePlease:
         phase++;
     }
 
     return ans;
+}
+
+std::string VCube2::GetRegex()
+{
+    std::vector<std::string> v(MovesString);
+
+    std::sort(v.begin(), v.end(), [](std::string &a, std::string &b) { return a.size() > b.size(); });
+
+    std::string ans;
+
+    for (auto &s : v)
+    {
+        ans += s;
+        ans += '|';
+    }
+
+    if (!ans.empty())
+    {
+        ans.pop_back();
+    }
+
+    return ans;
+}
+
+int VCube2::GetMove(std::string s)
+{
+    auto it = std::find(MovesString.begin(), MovesString.end(), s);
+
+    if (it == MovesString.end())
+    {
+        return 0;
+    }
+
+    return it - MovesString.begin();
 }
 
 vi VCube2::id(vi state, int phase)
