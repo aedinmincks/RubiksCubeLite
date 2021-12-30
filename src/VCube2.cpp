@@ -1,4 +1,5 @@
 #include "VCube2.h"
+#include <chrono>
 #include <map>
 #include <queue>
 
@@ -31,7 +32,6 @@ VCube2::VCube2(std::vector<std::string> cubies) : CRubiksCubeBase(16)
 
 void VCube2::Reset()
 {
-    size = 16;
     currentState.assign(16, 0);
     goalState.assign(16, 0);
 
@@ -136,7 +136,7 @@ std::string VCube2::Solve()
     int phase = 0;
     vi state = currentState;
 
-    while (phase < 3)
+    while (phase++ < 3)
     {
         vi currentId = id(state, phase), goalId = id(goalState, phase);
         if (currentId == goalId)
@@ -205,8 +205,7 @@ std::string VCube2::Solve()
             }
         }
 
-    nextPhasePlease:
-        phase++;
+    nextPhasePlease:;
     }
 
     return ans;
@@ -246,6 +245,27 @@ int VCube2::GetMove(std::string s)
     return it - MovesString.begin();
 }
 
+std::string VCube2::Random(int n)
+{
+    std::string ans;
+
+    std::srand(std::time(NULL));
+    vi state = currentState;
+
+    for (int i = 0; i < n; i++)
+    {
+        int move = std::rand() % MovesString.size();
+
+        state = ApplyMove(move, state);
+
+        ans += MovesString[move];
+    }
+
+    SetState(state);
+
+    return ans;
+}
+
 vi VCube2::id(vi state, int phase)
 {
     switch (phase)
@@ -276,6 +296,72 @@ vi VCube2::id(vi state, int phase)
     }
 
     return state;
+}
+
+bool VCube2::State2String(const vi &state, std::vector<std::string> &s)
+{
+    std::vector<std::string> ans(8);
+
+    for (int i = 0; i < 8; i++)
+    {
+        int index = currentState[i];
+        int dir = currentState[i + 8];
+
+        if (index < 0 || index >= goal.size())
+        {
+            return false;
+        }
+
+        std::string cubie = goal[index];
+        while (dir--)
+        {
+            cubie = cubie.substr(1) + cubie[0];
+        }
+
+        ans[i] = cubie;
+    }
+
+    s = ans;
+
+    return true;
+}
+
+bool VCube2::String2State(const std::vector<std::string> &s, vi &state)
+{
+    vi ans(16);
+
+    if (s.size() != 8)
+    {
+        return false;
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        std::string cubie = s[i];
+        int j;
+        for (j = 0; j < 3; j++)
+        {
+            auto it = std::find(goal.begin(), goal.end(), cubie);
+            if (it != goal.end())
+            {
+                ans[i] = it - goal.begin();
+                ans[i + 8] = j;
+                break;
+            }
+            else
+            {
+                cubie = cubie.substr(1) + cubie[0];
+            }
+        }
+        if (j == 3)
+        {
+            return false;
+        }
+    }
+
+    state = ans;
+
+    return true;
 }
 
 int VCube2::inverse(int move)

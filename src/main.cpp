@@ -1,13 +1,13 @@
 ﻿// main.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
+#include "VCube2.h"
 #include <cassert>
 #include <chrono>
 #include <filesystem>
 #include <iostream>
 #include <memory>
 #include <regex>
-#include "VCube2.h"
 
 int main(int argc, char *argv[])
 {
@@ -72,33 +72,50 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "get")
         {
+            std::vector<std::string> vs;
+            if (cube->State2String(cube->GetState(), vs))
+            {
+                std::cout << "[";
+
+                for (int i = 0; i < vs.size() - 1; i++)
+                {
+                    std::cout << vs[i] << ",";
+                }
+
+                std::cout << vs.back() << "]" << std::endl;
+            }
+            else
+            {
+                std::cout << "fail" << std::endl;
+            }
         }
         else if (cmd == "set")
         {
-            // std::string s;
-            // std::cin >> s;
+            std::string s;
+            std::cin >> s;
 
-            // std::vector<int> v;
+            std::vector<std::string> vs;
 
-            // std::regex r("([0-9]+)");
-            // std::smatch sm;
-            // while (std::regex_search(s, sm, r))
-            //{
-            //    // std::cout << sm.str() << std::endl;
+            std::regex r(R"([A-Z]+)");
+            std::smatch sm;
+            while (std::regex_search(s, sm, r))
+            {
+                vs.emplace_back(sm.str());
 
-            //    v.emplace_back(std::stoi(sm.str()));
+                s = sm.suffix();
+            }
 
-            //    s = sm.suffix();
-            //}
+            vi state;
 
-            // if (mc.SetFacelets(v))
-            //{
-            //    std::cout << "done!" << std::endl;
-            //}
-            // else
-            //{
-            //    std::cout << "error!" << std::endl;
-            //}
+            if (cube->String2State(vs, state))
+            {
+                cube->SetState(state);
+                std::cout << "success" << std::endl;
+            }
+            else
+            {
+                std::cout << "fail" << std::endl;
+            }
         }
         else if (cmd == "solve")
         {
@@ -116,28 +133,14 @@ int main(int argc, char *argv[])
         }
         else if (cmd == "random")
         {
-            /*int n;
+            int n;
             std::cin >> n;
 
-            std::string s = mc.RandomRotate(n);
+            std::string s = cube->Random(n);
 
             std::cout << s << std::endl;
-
-            mc.show();*/
         }
     }
 
     return 0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧:
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5.
-//   转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件

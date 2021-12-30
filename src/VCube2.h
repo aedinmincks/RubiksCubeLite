@@ -21,6 +21,12 @@ class VCube2 : public CRubiksCubeBase
 
     virtual int GetMove(std::string s) override;
 
+    virtual std::string Random(int n) override;
+
+    virtual bool State2String(const vi &state, std::vector<std::string> &s) override;
+
+    virtual bool String2State(const std::vector<std::string> &s, vi &state) override;
+
   private:
     static std::vector<std::string> goal;
 

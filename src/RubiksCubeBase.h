@@ -10,7 +10,10 @@ class CRubiksCubeBase
   public:
     CRubiksCubeBase(int n);
 
-    bool SetState(vi v);
+    void SetState(const vi &v)
+    {
+        currentState = v;
+    };
 
     vi &GetState()
     {
@@ -20,11 +23,6 @@ class CRubiksCubeBase
     const vi &GetGoalState()
     {
         return goalState;
-    };
-
-    int GetSize()
-    {
-        return size;
     };
 
     void DoMove(int move);
@@ -41,8 +39,13 @@ class CRubiksCubeBase
 
     virtual int GetMove(std::string s) = 0;
 
+    virtual std::string Random(int n) = 0;
+
+    virtual bool State2String(const vi &state, std::vector<std::string> &s) = 0;
+
+    virtual bool String2State(const std::vector<std::string> &s, vi &state) = 0;
+
   public:
     vi currentState;
     vi goalState;
-    int size;
 };
