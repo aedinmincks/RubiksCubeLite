@@ -335,7 +335,7 @@ bool VCube3::String2State(const std::vector<std::string> &s, vi &state)
 {
     vi ans(40);
 
-    if (s.size() != 8)
+    if (s.size() != 20)
     {
         return false;
     }

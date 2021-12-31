@@ -1,1 +1,69 @@
 # RubiksCubeLite
+
+目前仅支持2阶魔方和3阶魔方
+
+## example
+
+```shell
+? .\RubiksCubeLite.exe 3
+#show
+   UUU
+   UUU
+   UUU
+LLLFFFRRRBBB
+LLLFFFRRRBBB
+LLLFFFRRRBBB
+   DDD
+   DDD
+   DDD
+#set [RD,BR,LD,BL,FL,DF,UF,DB,UR,UL,RF,BU,BRD,BDL,ULF,DFL,RFD,RUF,LUB,RBU]
+success
+#solve
+F2D2B'LB2RU2F2DU'L'F2R2U'L2UB2D'F2UL2F2U2F2L2D2B2L2F2R2D2B2
+Time used (in seconds) :0.123366
+#do F2D2B'LB2RU2F2DU'L'F2R2U'L2UB2D'F2UL2F2U2F2L2D2B2L2F2R2D2B2
+F2
+D2
+B'
+L
+B2
+R
+U2
+F2
+D
+U'
+L'
+F2
+R2
+U'
+L2
+U
+B2
+D'
+F2
+U
+L2
+F2
+U2
+F2
+L2
+D2
+B2
+L2
+F2
+R2
+D2
+B2
+#show
+   UUU
+   UUU
+   UUU
+LLLFFFRRRBBB
+LLLFFFRRRBBB
+LLLFFFRRRBBB
+   DDD
+   DDD
+   DDD
+#exit
+Good bye!
+```
