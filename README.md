@@ -5,7 +5,7 @@
 ## example
 
 ```shell
-? .\RubiksCubeLite.exe 3
+> .\RubiksCubeLite.exe 3
 #show
    UUU
    UUU
