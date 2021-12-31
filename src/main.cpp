@@ -2,6 +2,7 @@
 //
 
 #include "VCube2.h"
+#include "VCube3.h"
 #include <cassert>
 #include <chrono>
 #include <filesystem>
@@ -23,6 +24,10 @@ int main(int argc, char *argv[])
     if (CubeString == "2")
     {
         cube = std::make_unique<VCube2>();
+    }
+    else if (CubeString == "3")
+    {
+        cube = std::make_unique<VCube3>();
     }
     else
     {

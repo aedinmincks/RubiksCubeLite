@@ -14,20 +14,14 @@ VCube2::VCube2() : CRubiksCubeBase(16)
     }
 }
 
-VCube2::VCube2(std::vector<std::string> cubies) : CRubiksCubeBase(16)
+VCube2::VCube2(const vi &state) : CRubiksCubeBase(16)
 {
     for (int i = 0; i < 8; i++)
     {
         goalState[i] = i;
-
-        std::string cubie = cubies[i];
-
-        while ((currentState[i] = std::find(goal.begin(), goal.end(), cubie) - goal.begin()) == 8)
-        {
-            cubie = cubie.substr(1) + cubie[0];
-            currentState[i + 8]++;
-        }
     }
+
+    SetState(state);
 }
 
 void VCube2::Reset()
@@ -58,7 +52,7 @@ void VCube2::Show()
         std::string cubie = goal[index];
         while (dir--)
         {
-            cubie = cubie.substr(1) + cubie[0];
+            cubie = cubie.back() +cubie.substr(0, cubie.size() - 1);
         }
 
         for (int j = 0; j < cubie.size(); j++)
@@ -86,7 +80,7 @@ vi VCube2::ApplyMove(int move, vi state)
         {1, 0, 4, 7}, // R
     };
 
-    const static std::vector<std::vector<int>> affectedCubiesorientation = {
+    const static std::vector<std::vector<int>> affectedCubiesOrientation = {
         {0, 0, 0, 0}, // U
         {0, 0, 0, 0}, // D
         {2, 1, 2, 1}, // F
@@ -105,7 +99,7 @@ vi VCube2::ApplyMove(int move, vi state)
         {
             int target = affectedCubiesLocation[face][i];
             int killer = affectedCubiesLocation[face][(i == 3) ? 0 : i + 1];
-            int orientationDelta = affectedCubiesorientation[face][i];
+            int orientationDelta = affectedCubiesOrientation[face][i];
 
             state[target] = oldstate[killer];
             state[target + 8] = oldstate[killer + 8] + orientationDelta;
@@ -123,24 +117,25 @@ const static std::vector<std::string> MovesString = {
     "U", "U2", "U'", "D", "D2", "D'", "F", "F2", "F'", "B", "B2", "B'", "L", "L2", "L'", "R", "R2", "R'",
 };
 
-const static std::vector<std::vector<int>> applicableMoves = {
-    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
-    {0, 1, 2, 3, 4, 5, 7, 10, 13, 16},
-    {1, 4, 7, 10, 13, 16},
-};
-
 std::string VCube2::Solve()
 {
+    const static std::vector<std::vector<int>> applicableMoves = {
+        {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
+        {0, 1, 2, 3, 4, 5, 7, 10, 13, 16},
+        {1, 4, 7, 10, 13, 16},
+    };
+
     std::string ans;
 
     int phase = 0;
     vi state = currentState;
 
-    while (phase++ < 3)
+    while (phase < 3)
     {
         vi currentId = id(state, phase), goalId = id(goalState, phase);
         if (currentId == goalId)
         {
+            phase++;
             continue;
         }
 
@@ -205,7 +200,8 @@ std::string VCube2::Solve()
             }
         }
 
-    nextPhasePlease:;
+    nextPhasePlease:
+         phase++;
     }
 
     return ans;

@@ -3,11 +3,11 @@
 #include "RubiksCubeBase.h"
 #include "string"
 
-class VCube2 : public CRubiksCubeBase
+class VCube3 : public CRubiksCubeBase
 {
   public:
-    VCube2();
-    VCube2(const vi& state);
+    VCube3();
+    VCube3(const vi& state);
 
     virtual void Reset() override;
 
