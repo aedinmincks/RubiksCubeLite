@@ -81,7 +81,7 @@ vi VCube3::ApplyMove(int move, vi state)
 {
     const static std::vector<std::vector<int>> affectedCubiesSideLocation = {
         {0, 1, 2, 3},   // U
-        {4, 5, 6, 7},   // D
+        {7, 6, 5, 4},   // D
         {0, 9, 4, 8},   // F
         {2, 10, 6, 11}, // B
         {3, 11, 7, 9},  // L
