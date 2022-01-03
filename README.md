@@ -1,69 +1,30 @@
 # RubiksCubeLite
 
-Ä¿Ç°½öÖ§³Ö2½×Ä§·½ºÍ3½×Ä§·½
+##ç›®å‰ä»…æ”¯æŒä»¥ä¸‹å‡ ç§é­”æ–¹
+
+ 2ï¼š 2é˜¶é­”æ–¹  
+ 3ï¼š 3é˜¶é­”æ–¹  
 
 ## example
 
 ```shell
 > .\RubiksCubeLite.exe 3
-#show
-   UUU
-   UUU
-   UUU
-LLLFFFRRRBBB
-LLLFFFRRRBBB
-LLLFFFRRRBBB
-   DDD
-   DDD
-   DDD
-#set [RD,BR,LD,BL,FL,DF,UF,DB,UR,UL,RF,BU,BRD,BDL,ULF,DFL,RFD,RUF,LUB,RBU]
+#get
+[UF,UR,UB,UL,DF,DR,DB,DL,FR,FL,BR,BL,UFR,URB,UBL,ULF,DRF,DFL,DLB,DBR]
+#set [UF,BR,DR,DB,DL,FR,UB,UL,UR,DF,BL,FL,RBU,DBR,DLB,FDR,RUF,FLD,ULF,UBL]
 success
-#solve
-F2D2B'LB2RU2F2DU'L'F2R2U'L2UB2D'F2UL2F2U2F2L2D2B2L2F2R2D2B2
-Time used (in seconds) :0.123366
-#do F2D2B'LB2RU2F2DU'L'F2R2U'L2UB2D'F2UL2F2U2F2L2D2B2L2F2R2D2B2
-F2
-D2
-B'
-L
-B2
-R
-U2
-F2
-D
-U'
-L'
-F2
-R2
-U'
-L2
-U
-B2
-D'
-F2
-U
-L2
-F2
-U2
-F2
-L2
-D2
-B2
-L2
-F2
-R2
-D2
-B2
 #show
-   UUU
-   UUU
-   UUU
-LLLFFFRRRBBB
-LLLFFFRRRBBB
-LLLFFFRRRBBB
    DDD
-   DDD
-   DDD
+   DUB
+   RUB
+BBFDFURRBRRL
+LLFDFURRLBBF
+LLFDLURRLBBF
+   LDF
+   UDF
+   UUU
+#solve
+L2B2R'R2D'
 #exit
 Good bye!
 ```
